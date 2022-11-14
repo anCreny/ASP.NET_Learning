@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <style>
+        td {padding: 5px; text-align: center;}
+        button {margin: 5px;}
+        table {width: 100%; border: 1px}
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Calculator</h2>
+        <p>
+            FirstNumber:<br/>
+            <input id="firstNumber" />
+        </p>
+        <p>
+            Operation:<br/>
+            <select id="operation">
+                <option value="1" >Plus</option>
+                <option value="2" >Minus</option>
+            </select>
+        </p>
+        <p>
+            SecondNumber:<br/>
+            <input id="secondNumber" />
+        </p>
+        <p>
+            Answer:<a id="answer" ></a>
+        </p>
+        <p>
+            <button id="calculate">Calculate</button>
+        </p>
+    </div>
+    <div>
+        <h2>History</h2>
+        <table>
+            <thead><tr><th>FirstNumber</th><th>Operator</th><th>SecondNumber</th><th>Answer</th></tr></thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function row(note){
+            
+            const tr = document.createElement("tr");
+            tr.setAttribute("data-rowId", note.id);
+            
+            const firstNumberTd = document.createElement("td");
+            firstNumberTd.append(note.firstNumber);
+            tr.append(firstNumberTd);
+            
+            const operatorTd = document.createElement("td");
+            let operator;
+            switch (note.sign){
+                case 1:
+                    operator = "PLUS(+)";
+                    break;
+                case 2:
+                    operator = "MINUS(-)";
+                    break;
+            }
+            operatorTd.append(operator);
+            tr.append(operatorTd);
+            
+            const secondNumberTd = document.createElement("td");
+            secondNumberTd.append(note.secondNumber);
+            tr.append(secondNumberTd);
+            
+            const answerTd = document.createElement("td");
+            answerTd.append(note.answer);
+            tr.append(answerTd);
+            
+            const linksTd = document.createElement("td");
+            
+            const removeLink = document.createElement("button");
+            removeLink.append("Remove");
+            removeLink.addEventListener("click", async () => await deleteNote(note.id));
+            
+            linksTd.append(removeLink);
+            tr.appendChild(linksTd);
+            
+            return tr;
+        }
+        
+        async function getNotes(){
+            const response = await fetch("/api/notes",{
+                method: "GET",
+                headers: {"Accept" : "application/json"}
+            })
+            if (response.ok === true){
+                const notes = await response.json();
+                const rows = document.querySelector("tbody");
+                notes.forEach(note => rows.append(row(note)))
+            }
+        }
+        
+        async function deleteNote(id){
+            const response = await fetch(`/api/notes/${id}`, {
+                method: "DELETE",
+                headers: {"Accept" : "application/json"}
+            });
+            console.log(response.url);
+            if (response.ok === true){
+                const note = await response.json();
+                document.querySelector(`tr[data-rowId='${note.id}']`).remove();
+            }
+            else 
+            {
+                const error = await response.json()
+                console.log(error.message);
+            }
+        }
+        
+        async function CreateNote(firstNumber, sign, secondNumber, answer){
+            const response = await fetch("/api/notes",{
+                method: "POST",
+                headers: {"Accept" : "application/json", "Content-Type" : "application/json"},
+                body: JSON.stringify({
+                    firstNumber: firstNumber,
+                    sign: sign,
+                    secondNumber: secondNumber,
+                    answer: answer
+                })
+            })
+            if (response.ok === true){
+                const note = await response.json();
+                console.log(note);
+                document.querySelector("tbody").append(row(note));
+            }
+            else
+            {
+                const error = await response.json();
+                console.log(error.message);
+            }
+        }
+        
+        document.getElementById("calculate").addEventListener( "click" , async () => {
+            
+            const firstNumber = document.getElementById("firstNumber").value;
+            const sign = document.getElementById("operation").value;
+            const secondNumber = document.getElementById("secondNumber").value;
+            
+            const response = await fetch("/api/calculate",{
+                method: "POST",
+                headers: {"Accept" : "application/json", "Content-Type" : "application/json" },
+                body: JSON.stringify({
+                    firstNumber: Number(firstNumber),
+                    sign: Number(sign),
+                    secondNumber: Number(secondNumber)
+                })
+            })
+            
+            if (response.ok === true){
+                const note = await response.json();
+                await CreateNote(note.firstNumber, note.sign, note.secondNumber, note.answer);
+                reset();
+            }else{
+                console.log("ne ok");
+            }
+        })
+        
+        function reset(){
+            document.getElementById("firstNumber").value = "";
+            document.getElementById("answer").value = "";
+            document.getElementById("secondNumber").value = "";
+        }
+        getNotes();
+    </script>
+</body>
+</html>
