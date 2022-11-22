@@ -5,8 +5,8 @@ var builder = WebApplication.CreateBuilder();
 var app = builder.Build();
 
 var handler = new TimeTableHandler();
-handler.ParseTimetable("3-42");
-var timetable = handler.GetTimetable();
+var timetable = handler.ParseTimetable("3-42");
+// var timetable = handler.GetTimetable();
 
 app.Map("/schedule", _ =>
 {

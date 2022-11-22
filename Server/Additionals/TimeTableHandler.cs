@@ -6,7 +6,7 @@ public class TimeTableHandler
 {
     private TimeTable? _table;
 
-    public void ParseTimetable(string groupNumber)
+    public TimeTable? ParseTimetable(string groupNumber)
     {
         var clinet = new HttpClient();
         var options = new JsonSerializerOptions();
@@ -16,12 +16,13 @@ public class TimeTableHandler
         {
             result = clinet.GetFromJsonAsync<TimeTable>("https://forms.isuct.ru/timetable/rvuzov", options).Result;
             _table = result;
-
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
+
+        return result;
     }
 
     public TimeTable? GetTimetable()
