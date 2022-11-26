@@ -1,20 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 98%">
 <head>
     <meta charset="UTF-8">
     <title>OneDay</title>
     <style>
         h1, h2 {text-align: center; color: #78aeed}
-        table {max-width: 40%; height: 60%; border: lightgrey; margin: auto; font-size: 25px}
-        body {background: #242424; font-family: Calibri; font-size: 20vm}
-        th {color: aquamarine; background: #363636; padding: 4px;  max-height: 8vh; max-width: 5vw;}
-        td {color: white; background: #363636; padding: 6px;}
-        button {display: inline-block; border: 0; background: #363636; color: white; height: 40px; width: 80px; border-radius: 10px}
+        table {height: 60%; border: lightgrey; margin: auto}
+        body {background: #242424; font-family: Calibri; font-size: 2.2vh}
+        th {color: aquamarine; background: #363636; padding: 8px}
+        td {color: white; background: #363636; padding: 15px; max-width: 33vh;}
+        button {display: inline-block; border: 0; background: #363636; color: white; height: 15vh; width: 14vh; font-size: 2.6vh;}
         button:hover{ background: #3e3e3e }
     </style>
 </head>
-    <body>
-    <div>
+    <body style="
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    ">
+    <div style="
+    flex: 1 0 auto;
+    ">
         <div>
             <h1 id="day">Today is undefined</h1>
         </div>
@@ -22,40 +28,23 @@
             <h2 id="week">of the week</h2>
         </div>
 
-    
-<div style="text-align: center;" id="dayFrame">
-    <button id="yesterday" style="display: inline-block; justify-content: left">
-        Yersterday
-    </button>
-    <table id="allday" style="display: inline-block; justify-content: center">
+        
+    <table id="allday" style="justify-content: center; margin: auto">
         <tr>
-            <th style="border-top-left-radius: 10px">Time</th>
-            <th style="border-top-right-radius: 10px">Lessons</th>
-        </tr>
-        <tr>
-            <th>8:00-<br/>9:50</th>
-            <td id="08:00:00"></td>
-        </tr>
-        <tr>
-            <th>9:50-<br/>11:25</th>
-            <td id="09:50:00"></td>
-        </tr>
-        <tr>
-            <th>12:10-<br/>13:45</th>
-            <td id="12:10:00"></td>
-        </tr>
-        <tr>
-            <th style="border-bottom-left-radius: 10px">14:00-<br/>15:35</th>
-            <td id="14:00:00" style="border-bottom-right-radius: 10px"></td>
+            <th style="border-top-left-radius: 15px" id="time">Time</th>
+            <th style="border-top-right-radius: 15px" id="lesson">Lessons</th>
         </tr>
     </table>
-    <button id="tomorrow" style="display: inline-block">
-        Tomorrow
-    </button>
-</div>
+    
     </div>
-    <div style="text-align: center; padding-top: 10px">
-        <button style="height: 80px; width: 100px; border-radius: 10px" onclick="location.href ='./' ">Menu</button>
+    <div style="text-align: center; flex: 0 0 auto">
+        <button id="yesterday" style="display: inline-block; justify-content: left; border-bottom-left-radius: 25px; border-top-left-radius: 25px">
+            <
+        </button>
+        <button onclick="location.href ='./' ">Menu</button>
+        <button id="tomorrow" style="display: inline-block; border-top-right-radius: 25px; border-bottom-right-radius: 25px">
+            >
+        </button>
     </div>
     <script>
             document.getElementById("tomorrow").addEventListener("click", () => {
@@ -113,23 +102,33 @@
                         break;
                 }
                 document.getElementById("week").innerText = week;
-                if (day.weekday === -1){
+                if (day.weekday === -1 || day.subjects.length === 0){
                     document.getElementById("allday").remove();
                 }else{
                     day.subjects.forEach( _ => SetLesson(_))
                 }
             }
-            
+            let td = document.getElementById("lesson");
+            let th = document.getElementById("time");
             function SetLesson(lesson){
-                const td = document.getElementById(lesson.time.start);
-        
-                let info = lesson.name + "[" + lesson.type + "]" + "\n"
+                td.style.borderBottomRightRadius = ""
+                th.style.borderBottomLeftRadius = ""
+                const table = document.getElementById("allday");
+                const tr = document.createElement("tr");
+                th = document.createElement("th");
+                td = document.createElement("td");
+                td.style.borderBottomRightRadius = "15px"
+                th.style.borderBottomLeftRadius = "15px"
                 
-                lesson.audience.forEach(_ => info += _.name + "\n");
+                const time = (lesson.time.start + ":" + lesson.time.end).split(":");
                 
-                lesson.teachers.forEach(_ => info += _.name + "\n");
+                th.innerText = time[0] + ":" + time[1] + "-\n" + time[3] + ":" + time[4];
                 
-                td.innerText = info;
+                let content = lesson.name + "[" + lesson.type + "]\n";
+                lesson.audience.forEach(a => content += a.name + "\n");
+                lesson.teachers.forEach(t => content += t.name + "\n");
+                console.log(content);
+                td.innerText = content;
 
                 switch (lesson.type){
                     case "лаб.":
@@ -142,6 +141,9 @@
                         td.style.backgroundColor = "#657352";
                         break;
                 }
+                tr.append(th);
+                tr.appendChild(td);
+                table.append(tr);
             }
             GetDay();
 

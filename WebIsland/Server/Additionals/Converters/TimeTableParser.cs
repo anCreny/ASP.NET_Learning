@@ -106,7 +106,7 @@ public class TimeTableParser : JsonConverter<TimeTable>
                                                     weekday = reader.GetInt32();
                                                     break;
                                                 case "week":
-                                                    week = reader.GetInt32();
+                                                    week = 3 - reader.GetInt32();
                                                     break;
                                             }
                                         }
@@ -139,6 +139,7 @@ public class TimeTableParser : JsonConverter<TimeTable>
                     }
 
                 }
+                
                 timeTable.AddSubject(new Subject(subject, type, timeStart, timeEnd, lessonStart, lessonEnd, weekday, week, audience, teachers));
                 audience = new List<string>();
                 teachers = new List<string>();

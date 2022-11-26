@@ -8,6 +8,8 @@ var handler = new TimeTableHandler();
 var timetable = handler.ParseTimetable("3-42");
 // var timetable = handler.GetTimetable();
 
+Console.WriteLine("ЗАПРОС");
+
 app.Map("/schedule", _ =>
 {
     _.Map("/api", __ =>
@@ -33,7 +35,11 @@ app.Map("/today", _ =>
     _.UseToday();
 });
 
-app.Run(async (c) => await c.Response.SendFileAsync("HTML/index.html"));
+app.Run(async (c) =>
+{
+    Console.WriteLine("Запрос");
+    await c.Response.SendFileAsync("HTML/index.html");
+});
 
 app.Run();
 
