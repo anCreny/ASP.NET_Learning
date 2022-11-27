@@ -8,7 +8,7 @@
         table {width: 100%; border: lightgrey}
         body {background: #242424; font-family: Calibri}
         th {color: aquamarine; background: #363636; padding: 4px;}
-        td {color: white; background: #363636; padding: 6px; min-width: 120px; max-width: 150px; min-height: 80px}
+        td {color: white; background: #363636; padding: 6px; min-width: 120px; max-width: 175px; min-height: 80px}
         button {display: inline-block; border: 0; background: #363636; color: white;}
         button:hover{ background: #3e3e3e }
     </style>
@@ -22,12 +22,12 @@
         <tr>
             <th style="border-top-left-radius: 10px">№</th>
             <th>Time</th>
-            <th>Mondey</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th style="border-top-right-radius: 10px">Saturday</th>
+            <th id="1">Monday</th>
+            <th id="2">Tuesday</th>
+            <th id="3">Wednesday</th>
+            <th id="4">Thursday</th>
+            <th id="5">Friday</th>
+            <th style="border-top-right-radius: 10px" id="6">Saturday</th>
         </tr>
     </table>
 </body>
@@ -48,6 +48,8 @@
             console.log(error.message)
         }
         drawTable();
+        setToday();
+        setWeek();
     }
     
     function SetDay(day){
@@ -105,6 +107,7 @@
             tr.id = table[i][0][0];
             th.rowSpan = table[i].length;
             th.innerText = (i + 1).toString();
+            th.id = "week" + th.innerText;
             th.scope = "rowgroup";
             
             const time = table[i][0][0].split(":");
@@ -148,6 +151,26 @@
                 }
             }
         }
+    }
+    
+    function setToday(){
+        let today = new Date().getDay();
+        if (today !== 0){
+        const day = document.getElementById(today.toString());
+        day.style.backgroundColor = "#577292";
+        }
+    }
+    
+    function setWeek(){
+        let today = new Date();
+        let start = new Date();
+        start.setMonth(8, 5);
+        console.log(start);
+        let week = Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 7)) % 2 + 1;
+        week = 3 - week;
+        console.log(week);
+        const weekLable = document.getElementById("week" + week);
+        weekLable.style.backgroundColor = "#577292";
     }
     GetSchedule();
 </script>
