@@ -182,11 +182,10 @@
                 
                 const startPoint = new Date();
                 startPoint.setHours(Number(time[0]), Number(time[1]));
-                startPoint.setDate(startPoint.getDate() + Number(getQueryParams(location.href)['day']));
-                
+                startPoint.setTime(startPoint.getTime() + (Number(getQueryParams(location.href)['day']) * 24 * 60 * 60 * 1000));
                 const endPoint = new Date();
                 endPoint.setHours(Number(time[3]), Number(time[4]));
-                endPoint.setDate(startPoint.getDate() + Number(getQueryParams(location.href)['day']));
+                endPoint.setTime(endPoint.getTime() + (Number(getQueryParams(location.href)['day']) * 24 * 60 * 60 * 1000));
                 
                 
                 let m = [startPoint, endPoint, progressDiv.id];
