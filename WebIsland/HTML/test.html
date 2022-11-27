@@ -3,25 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .myBar{
+            width: 0%;
+            height: 30%;
+            background-color: green;
+        }
+        .myProgress{
+            width: 100%;
+            background-color: grey;
+        }
+        
+        .myBar1{
+            width: 0%;
+            height: 30%;
+            background-color: green;
+        }
+        
+        table{
+            margin: auto;
+            height: 60%;
+        }
+        
+        td, th {background-color: #3e3e3e; color: white}
+        
+        .timeBar{
+            height: 100%;
+            width: 5px;
+            background-color: red;
+        }
+        
+        .thTimeBar{
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
-<div id="test"></div>
+<div class = "myProgress">
+    <div class = "myBar" id="bar">TestBar</div>
+</div>
+
+<div class = "myProgress">
+    <div class = "myBar1" id="bar2">TestBar1</div>
+</div>
+<div>
+    <table>
+        <tr>
+            <th></th>
+            <th>Time</th>
+            <th>Lesson</th>
+        </tr>
+        <tr>
+            <th class="thTimeBar">
+                <div class="timeBar"></div>
+            </th>
+            <th>
+                Time1
+            </th>
+            <td>Lesson1<br/>
+                Name1<br/>
+                Aud1<br/>
+                Teacher1<br/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+
+            </th>
+            <th class="normalTh">Time2</th>
+            <td>Lesson2<br/>
+                Name2<br/>
+                Aud2<br/>
+                Teacher2<br/>
+            </td>
+        </tr>
+    </table>
+</div>
+
 <script>
-    async function GetTest() {
-        const response = await fetch("test/api", {
-            method: "GET",
-            headers: {"Accept": "application/json"}
-        });
-
-        if (response.ok === true) {
-            const json = await response.json();
-            console.log(json.strings);
-        } else {
-
+    console.log(Number("00"))
+    const startPoint = new Date();
+    startPoint.setHours(10,0);
+    const endPoint = new Date();
+    endPoint.setHours(11,0);
+    
+    const startPoint1 = new Date();
+    startPoint1.setHours(11,0)
+    const endPoint1 = new Date();
+    endPoint1.setHours(12,0);
+    
+    
+    setInterval(start, 1);
+    function start(){
+        checkBar();
+        checkBar1();
+    }
+    
+    function checkBar(){
+        const currentTime = new Date();
+        const bar = document.getElementById("bar");
+        const final = endPoint.getTime() - startPoint.getTime();
+        if (currentTime.getTime() < endPoint.getTime()) {
+            bar.style.width = `${(currentTime.getTime() - startPoint.getTime()) * 100 / final}%`;
+        }else{
+            bar.style.width = "100%";
         }
     }
     
-    GetTest();
+    function checkBar1(){
+        const currentTime = new Date();
+        const bar1 = document.getElementById("bar2");
+        const final = endPoint1.getTime() - startPoint1.getTime();
+        if (currentTime.getTime() < endPoint1.getTime()){
+            bar1.style.width = `${(currentTime.getTime() - startPoint1.getTime()) * 100 / final}%`;
+        }
+        else
+        {
+            bar1.style.width = "100%";
+        }
+    }
 </script>
 </body>
 </html>

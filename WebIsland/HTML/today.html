@@ -11,6 +11,15 @@
         td {color: white; background: #363636; padding: 15px; max-width: 33vh;}
         button {display: inline-block; border: 0; background: #363636; color: white; height: 15vh; width: 14vh; font-size: 2.6vh;}
         button:hover{ background: #3e3e3e }
+        .timeBar{
+            height: 0%;
+            width: 100%;
+            background-color: blue;
+        }
+
+        .thTimeBar{
+            padding: 0;
+        }
     </style>
 </head>
     <body style="
@@ -22,7 +31,7 @@
     flex: 1 0 auto;
     ">
         <div>
-            <h1 id="day">Today is undefined</h1>
+            <h1 id="day">Today</h1>
         </div>
         <div>
             <h2 id="week">of the week</h2>
@@ -31,6 +40,7 @@
         
     <table id="allday" style="justify-content: center; margin: auto">
         <tr>
+            <th style="background-color: #242424"></th>
             <th style="border-top-left-radius: 15px" id="time">Time</th>
             <th style="border-top-right-radius: 15px" id="lesson">Lessons</th>
         </tr>
@@ -47,6 +57,8 @@
         </button>
     </div>
     <script>
+            let dates = [];
+        
             document.getElementById("tomorrow").addEventListener("click", () => {
                const params = getQueryParams(location.href);
                const dayOffset = params['day'];
@@ -73,6 +85,7 @@
                 if (response.ok === true){
                     const day = await response.json();
                     SetDay(day);
+                    setInterval(startCheckProgress, 100);
                 }
             }
             function getQueryParams(url) {
@@ -87,10 +100,10 @@
             
             function SetDay(day){
                 if (day.weekday === -1) {
-                    document.getElementById("day").innerText = "Today is Sunday"
+                    document.getElementById("day").innerText = "Sunday"
                 }
                 else{
-                    document.getElementById("day").innerText = "Today is " + days[day.weekday - 1];
+                    document.getElementById("day").innerText = days[day.weekday - 1];
                 }
                 let week;
                 switch (day.week){
@@ -109,16 +122,17 @@
                 }
             }
             let td = document.getElementById("lesson");
-            let th = document.getElementById("time");
+            let counter = 0;
+            let progressBar;
+            let progressDiv;
+            
             function SetLesson(lesson){
                 td.style.borderBottomRightRadius = ""
-                th.style.borderBottomLeftRadius = ""
                 const table = document.getElementById("allday");
                 const tr = document.createElement("tr");
-                th = document.createElement("th");
+                const th = document.createElement("th");
                 td = document.createElement("td");
                 td.style.borderBottomRightRadius = "15px"
-                th.style.borderBottomLeftRadius = "15px"
                 
                 const time = (lesson.time.start + ":" + lesson.time.end).split(":");
                 
@@ -141,9 +155,67 @@
                         td.style.backgroundColor = "#657352";
                         break;
                 }
+                
+                if (counter !== 0){
+                    progressBar.style.borderBottomLeftRadius = "";
+                    progressDiv.style.borderBottomLeftRadius = "";
+                }
+                
+                progressBar = document.createElement("th");
+                progressBar.style.borderBottomLeftRadius = "15px";
+                progressBar.className = "thTimeBar";
+                
+                
+                progressDiv = document.createElement("div");
+                progressDiv.id = lesson.time.start;
+                progressDiv.style.borderBottomLeftRadius = "15px";
+                progressDiv.setAttribute("class", "timeBar")
+                progressBar.append(progressDiv);
+                tr.append(progressBar);
                 tr.append(th);
                 tr.appendChild(td);
                 table.append(tr);
+                if (counter === 0){
+                    progressBar.style.borderTopLeftRadius = "15px";
+                    progressDiv.style.borderTopLeftRadius = "15px";
+                }
+                
+                const startPoint = new Date();
+                startPoint.setHours(Number(time[0]), Number(time[1]));
+                startPoint.setDate(startPoint.getDate() + Number(getQueryParams(location.href)['day']));
+                
+                const endPoint = new Date();
+                endPoint.setHours(Number(time[3]), Number(time[4]));
+                endPoint.setDate(startPoint.getDate() + Number(getQueryParams(location.href)['day']));
+                
+                
+                let m = [startPoint, endPoint, progressDiv.id];
+                dates.push(m);
+                
+                counter++;
+            }
+            
+            function startCheckProgress(){
+                for (const date of dates) {
+                    checkProgress(date);
+                }
+            }
+            
+            function checkProgress(date){
+                const currentPoint = new Date();
+                const startPoint = date[0];
+                const endPoint = date[1];
+                const progressBar = document.getElementById(date[2]);
+                
+                const final = endPoint.getTime() - startPoint.getTime();
+                let progress = 0;
+                if (currentPoint.getTime() < endPoint.getTime()){
+                    progress = (currentPoint.getTime() - startPoint.getTime()) * 100 / final;
+                }
+                else{
+                    progress = 100;
+                }
+                progressBar.style.height = `${progress}%`;
             }
             GetDay();
 
