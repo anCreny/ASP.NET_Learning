@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder();
 var app = builder.Build();
 
 var handler = new TimeTableHandler();
-var timetable = handler.ParseTimetable("3-42");
+var timetable = handler.ParseTimetable("3-185");
 // var timetable = handler.GetTimetable();
 
 Console.WriteLine("ЗАПРОС");

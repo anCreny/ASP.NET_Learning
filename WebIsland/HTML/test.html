@@ -23,18 +23,27 @@
         table{
             margin: auto;
             height: 60%;
+            font-size: 30px;
         }
         
         td, th {background-color: #3e3e3e; color: white}
         
         .timeBar{
             height: 100%;
-            width: 5px;
+            width: 10px;
             background-color: red;
+            mask: inherit;
         }
         
         .thTimeBar{
             padding: 0;
+            border-top-left-radius: 15px;
+        }
+        
+        .timeBar2{
+            height: 100%;
+            width: 100%;
+            background-color: blue;
         }
     </style>
 </head>
@@ -49,13 +58,14 @@
 <div>
     <table>
         <tr>
-            <th></th>
+            <th style="background-color: white"></th>
             <th>Time</th>
             <th>Lesson</th>
         </tr>
         <tr>
             <th class="thTimeBar">
-                <div class="timeBar"></div>
+                <div class="timeBar">
+                </div>
             </th>
             <th>
                 Time1

@@ -10,7 +10,7 @@ public class TimeTableHandler
     {
         var clinet = new HttpClient();
         var options = new JsonSerializerOptions();
-        options.Converters.Add(new TimeTableParser("3-42"));
+        options.Converters.Add(new TimeTableParser(groupNumber));
         TimeTable? result = null;
         try
         {

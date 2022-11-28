@@ -50,6 +50,7 @@
             const error = response.json();
             console.log(error.message)
         }
+        sortLessons();
         drawTable();
         setToday();
         setWeek();
@@ -174,6 +175,24 @@
         console.log(week);
         const weekLable = document.getElementById("week" + week);
         weekLable.style.backgroundColor = "#577292";
+    }
+    
+    function sortLessons(){
+        console.log(table);
+        for (const week of table) {
+            week.sort(compare);
+        }
+        console.log(table);
+    }
+    
+    function compare(timeA, timeB){
+        if (Number(timeA[0].split(":")[0]) > Number(timeB[0].split(":")[0])){
+            return 1;
+        }
+        if (Number(timeA[0].split(":")[0]) < Number(timeB[0].split(":")[0])){
+            return -1;
+        }
+        return 0;
     }
     GetSchedule();
 </script>
