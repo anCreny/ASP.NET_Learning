@@ -70,15 +70,15 @@
                 break;
             }
         }
-        if (isExists === true){
-            localMass[weekday] = createCell(lesson);
-            isExists = false;
-        }
-        else
-        {
-            let massive = [lesson.time.start + ":" + lesson.time.end + ":" + week, "", "", "", "", "", ""];
-            massive[weekday] = createCell(lesson);
-            table[week-1].push(massive);
+        if (!lesson.name.toString().includes("День самостоятельной работ")) {
+            if (isExists === true) {
+                localMass[weekday] = createCell(lesson);
+                isExists = false;
+            } else {
+                let massive = [lesson.time.start + ":" + lesson.time.end + ":" + week, "", "", "", "", "", ""];
+                massive[weekday] = createCell(lesson);
+                table[week - 1].push(massive);
+            }
         }
     }
     
@@ -93,6 +93,9 @@
                 break;
             case "пр.з.":
                 data += "3";
+                break;
+            default:
+                data += 0;
                 break;
         }
         data += lesson.name + "[" + lesson.type + "]" + "\n";

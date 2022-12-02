@@ -1,24 +1,22 @@
 using System.Text.Json;
+using WebIsland.Server.Services;
 
 namespace WebIsland;
 
 public class TodayApiMiddleWare
 {
     private readonly RequestDelegate _next;
-    private readonly TimeTable _timeTable;
-
-    public TodayApiMiddleWare(RequestDelegate next, TimeTable timeTable)
+    public TodayApiMiddleWare(RequestDelegate next)
     {
-        _next = next;
-        _timeTable = timeTable;
+        _next = next; 
     }
 
-    public async Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context, TimeTableService timeTableService)
     {
         var dayOffset = Convert.ToInt32(context.Request.Path.ToString().Split("/")[2]);
         var today = DateTime.Today;
         today = today.AddDays(Convert.ToInt32(dayOffset));
-        var currentDay = _timeTable.GetDay(today);
+        var currentDay = timeTableService.TimeTable.GetDay(today);
 
         var options = new JsonSerializerOptions();
         options.Converters.Add(new DayConverter());

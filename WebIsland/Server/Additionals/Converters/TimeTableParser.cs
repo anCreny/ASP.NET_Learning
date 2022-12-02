@@ -146,7 +146,7 @@ public class TimeTableParser : JsonConverter<TimeTable>
             }
         }
 
-        return timeTable;
+        return week == 0 ? null : timeTable;
     }
 
     public override void Write(Utf8JsonWriter writer, TimeTable value, JsonSerializerOptions options)

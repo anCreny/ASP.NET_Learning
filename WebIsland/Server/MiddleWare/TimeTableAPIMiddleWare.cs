@@ -1,23 +1,21 @@
 using System.Text.Json;
+using WebIsland.Server.Services;
 
 namespace WebIsland;
 
 public class TimeTableAPIMiddleWare
 {
     private readonly RequestDelegate _next;
-    private readonly TimeTable _timeTable;
-
-    public TimeTableAPIMiddleWare(RequestDelegate next, TimeTable timeTable)
+    public TimeTableAPIMiddleWare(RequestDelegate next)
     {
         _next = next;
-        _timeTable = timeTable;
     }
 
-    public async Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context, TimeTableService timeTableService)
     {
         var options = new JsonSerializerOptions();
         options.Converters.Add(new TimeTableParser(string.Empty));
-        await context.Response.WriteAsJsonAsync(_timeTable, options);
+        await context.Response.WriteAsJsonAsync(timeTableService.TimeTable, options);
     }
 
 }

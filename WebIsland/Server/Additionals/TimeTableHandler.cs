@@ -4,9 +4,9 @@ namespace WebIsland;
 
 public class TimeTableHandler
 {
-    private TimeTable? _table;
-
-    public TimeTable? ParseTimetable(string groupNumber)
+    private Dictionary<string, TimeTable> _tables = new Dictionary<string, TimeTable>();
+    
+    private TimeTable? ParseTimetable(string groupNumber)
     {
         var clinet = new HttpClient();
         var options = new JsonSerializerOptions();
@@ -15,7 +15,6 @@ public class TimeTableHandler
         try
         {
             result = clinet.GetFromJsonAsync<TimeTable>("https://forms.isuct.ru/timetable/rvuzov", options).Result;
-            _table = result;
         }
         catch (Exception e)
         {
@@ -25,8 +24,26 @@ public class TimeTableHandler
         return result;
     }
 
-    public TimeTable? GetTimetable()
+    public bool CheckGroupTimeTable(string course, string groupNumber)
     {
-        return _table;
+        return _tables.ContainsKey($"{course}-{groupNumber}");
     }
+
+    public TimeTable? GetGroupTimeTable(string course, string groupNumber)
+    {
+        return _tables[$"{course}-{groupNumber}"];
+    }
+
+    public bool ParseNewTimeTable(string course, string groupNumber)
+    {
+        var table = ParseTimetable($"{course}-{groupNumber}");
+        if (table is not null)
+        {
+            _tables.Add($"{course}-{groupNumber}", table);
+            return true;
+        }
+
+        return false;
+    }
+
 }

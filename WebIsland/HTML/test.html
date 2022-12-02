@@ -4,134 +4,49 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        .myBar{
-            width: 0%;
-            height: 30%;
-            background-color: green;
+        .easy-basket-filter-ticks {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            height: 5px;
+            padding-top: 8px;
+            font: 11px Calibri;
+            cursor: default;
+            left: 0;
+            bottom: 0;
+            width: 98%;
         }
-        .myProgress{
-            width: 100%;
-            background-color: grey;
-        }
-        
-        .myBar1{
-            width: 0%;
-            height: 30%;
-            background-color: green;
-        }
-        
-        table{
-            margin: auto;
-            height: 60%;
-            font-size: 30px;
-        }
-        
-        td, th {background-color: #3e3e3e; color: white}
-        
-        .timeBar{
+        .easy-basket-filter-ticks > div {
             height: 100%;
-            width: 10px;
-            background-color: red;
-            mask: inherit;
+            width: 1px;
+            color: aquamarine;
+            font-size: 15px;
+        }
+        .easy-basket-filter-ticks > div:nth-child(10n - 9) {
+            height: 150%;
         }
         
-        .thTimeBar{
-            padding: 0;
-            border-top-left-radius: 15px;
-        }
-        
-        .timeBar2{
-            height: 100%;
-            width: 100%;
-            background-color: blue;
-        }
     </style>
 </head>
 <body>
-<div class = "myProgress">
-    <div class = "myBar" id="bar">TestBar</div>
+<div id="number" ></div>
+<div style="width: 100px">
+<input style="width: 100%" type="range" min="1" max="4" id="range" oninput="{
+    document.getElementById('number').innerText = document.getElementById('range').value;
+}">
+<div class="easy-basket-filter-ticks">
+    <div data-value="1">1</div>
+    <div data-value="2">2</div>
+    <div data-value="3">3</div>
+    <div data-value="4">4</div>
 </div>
-
-<div class = "myProgress">
-    <div class = "myBar1" id="bar2">TestBar1</div>
 </div>
-<div>
-    <table>
-        <tr>
-            <th style="background-color: white"></th>
-            <th>Time</th>
-            <th>Lesson</th>
-        </tr>
-        <tr>
-            <th class="thTimeBar">
-                <div class="timeBar">
-                </div>
-            </th>
-            <th>
-                Time1
-            </th>
-            <td>Lesson1<br/>
-                Name1<br/>
-                Aud1<br/>
-                Teacher1<br/>
-            </td>
-        </tr>
-        <tr>
-            <th>
-
-            </th>
-            <th class="normalTh">Time2</th>
-            <td>Lesson2<br/>
-                Name2<br/>
-                Aud2<br/>
-                Teacher2<br/>
-            </td>
-        </tr>
-    </table>
-</div>
+</body>
 
 <script>
-    console.log(Number("00"))
-    const startPoint = new Date();
-    startPoint.setHours(10,0);
-    const endPoint = new Date();
-    endPoint.setHours(11,0);
-    
-    const startPoint1 = new Date();
-    startPoint1.setHours(11,0)
-    const endPoint1 = new Date();
-    endPoint1.setHours(12,0);
-    
-    
-    setInterval(start, 1);
-    function start(){
-        checkBar();
-        checkBar1();
-    }
-    
-    function checkBar(){
-        const currentTime = new Date();
-        const bar = document.getElementById("bar");
-        const final = endPoint.getTime() - startPoint.getTime();
-        if (currentTime.getTime() < endPoint.getTime()) {
-            bar.style.width = `${(currentTime.getTime() - startPoint.getTime()) * 100 / final}%`;
-        }else{
-            bar.style.width = "100%";
-        }
-    }
-    
-    function checkBar1(){
-        const currentTime = new Date();
-        const bar1 = document.getElementById("bar2");
-        const final = endPoint1.getTime() - startPoint1.getTime();
-        if (currentTime.getTime() < endPoint1.getTime()){
-            bar1.style.width = `${(currentTime.getTime() - startPoint1.getTime()) * 100 / final}%`;
-        }
-        else
-        {
-            bar1.style.width = "100%";
-        }
-    }
 </script>
-</body>
+
 </html>

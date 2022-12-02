@@ -1,22 +1,31 @@
 using System.Text.RegularExpressions;
 using WebIsland;
+using WebIsland.Server.Services;
 
 var builder = WebApplication.CreateBuilder();
+builder.Services.AddSingleton<TimeTableHandler>();
+builder.Services.AddScoped<TimeTableService>();
+
 var app = builder.Build();
 
-var handler = new TimeTableHandler();
-var timetable = handler.ParseTimetable("3-185");
-// var timetable = handler.GetTimetable();
+app.UseCookieChecker();
 
-Console.WriteLine("ЗАПРОС");
+app.Map("/settings", _ =>
+{
+    _.Map("/api", __ =>
+        {
+            __.UseSettingAPI();
+        })
+        .UseSettings();
+});
 
 app.Map("/schedule", _ =>
 {
     _.Map("/api", __ =>
     {
-        __.UseTimeTableAPI(timetable);
-    });
-    _.UseTimeTable();
+        __.UseTimeTableAPI();
+    })
+        .UseTimeTable();
 });
 
 app.Map("/test", _ =>
@@ -29,15 +38,14 @@ app.Map("/today", _ =>
     _.MapWhen(
         context => Regex.IsMatch(context.Request.Path, "^/api/([(-9)-9]+)$"), __ =>
     {
-        __.UseTodayAPI(timetable);
-    });
-    _.UseCachingError();
-    _.UseToday();
+        __.UseTodayAPI();
+    })
+    .UseCachingError()
+    .UseToday();
 });
 
 app.Run(async (c) =>
 {
-    Console.WriteLine("Запрос");
     await c.Response.SendFileAsync("HTML/index.html");
 });
 
