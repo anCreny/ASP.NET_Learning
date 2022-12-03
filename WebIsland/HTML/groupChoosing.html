@@ -116,6 +116,40 @@
             font-size: 8vh;
             display: none;
         }
+
+        .container {
+            width: 28vh;
+            height: 100px;
+            margin-top: 10vh;
+        }
+
+        .block {
+            position: relative;
+            box-sizing: border-box;
+            float: left;
+            margin: 0 1.1vh 1.1vh 0;
+            width: 1.5vh;
+            height: 1.5vh;
+            border-radius: 3px;
+            background: #FFF;
+        }
+
+        .block:nth-child(10n+1) { animation: wave 2s ease .0s infinite; }
+        .block:nth-child(10n+2) { animation: wave 2s ease .1s infinite; }
+        .block:nth-child(10n+3) { animation: wave 2s ease .2s infinite; }
+        .block:nth-child(10n+4) { animation: wave 2s ease .3s infinite; }
+        .block:nth-child(10n+5) { animation: wave 2s ease .4s infinite; }
+        .block:nth-child(10n+6) { animation: wave 2s ease .5s infinite; }
+        .block:nth-child(10n+7) { animation: wave 2s ease .6s infinite; }
+        .block:nth-child(10n+8) { animation: wave 2s ease .7s infinite; }
+        .block:nth-child(10n+9) { animation: wave 2s ease .8s infinite; }
+        .block:nth-child(10n+10) { animation: wave 2s ease .9s infinite; }
+
+        @keyframes wave {
+            0%   { top: 0;     opacity: 1; }
+            50%  { opacity: .2; }
+            100% { top: 0;     opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -148,21 +182,76 @@
     </div>
 </div>
 <div>
-    <button onclick="setGroupNumber()">Submit</button>
+    <button id="submit" onclick="setGroupNumber()">Submit</button>
+    <div style="display: none" id="loading" class="container">
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+    </div>
 </div>
 <h2 id="error">Invalid Parameters</h2>
 </body>
 <script>
     async function setGroupNumber(){
-        const respone = await fetch("/api", {
+        document.getElementById("submit").style.display = "none";
+        document.getElementById("loading").style.display = "block"
+        document.getElementById("error").style.display = "none"
+        const response = await fetch("/api", {
             method: "POST",
-            headers: {"Content-Type" : "application/json"},
+            headers: {"Accept" : "application/json", "Content-Type" : "application/json"},
             body: JSON.stringify({
                 course: document.getElementById("course").value,
                 number: document.getElementById("number").value
             })
         });
-        location.href = "/";
+        
+        if (response.status === 200)
+        {
+            location.href = "/";
+        }
+        else
+        {
+            document.getElementById("loading").style.display = "none"
+            document.getElementById("submit").style.display = "block";
+            document.getElementById("error").style.display = "block";
+        }
     }
 </script>
 </html>

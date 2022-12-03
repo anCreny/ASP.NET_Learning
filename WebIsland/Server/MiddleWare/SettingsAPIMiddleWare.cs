@@ -1,3 +1,5 @@
+using WebIsland.Server.Services;
+
 namespace WebIsland.Server.MiddleWare;
 
 public class SettingsAPIMiddleWare
@@ -7,15 +9,22 @@ public class SettingsAPIMiddleWare
         
     }
 
-    public async Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context, TimeTableService timeTableService)
     {
         try
         {
             var groupNumber = await context.Request.ReadFromJsonAsync<GroupNumber>();
             if (groupNumber is not null)
             {
-                context.Response.Cookies.Delete("number");
-                context.Response.Cookies.Append("number", $"{groupNumber.Course}-{groupNumber.Number}");
+                if (timeTableService.TryCacheGroup(groupNumber))
+                {
+                    context.Response.Cookies.Delete("number");
+                    context.Response.Cookies.Append("number", $"{groupNumber.Course}-{groupNumber.Number}");
+                }
+                else
+                {
+                    context.Response.StatusCode = 11;
+                }
             }
         }
         catch (Exception e)

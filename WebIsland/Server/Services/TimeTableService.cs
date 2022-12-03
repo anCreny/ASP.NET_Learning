@@ -10,26 +10,14 @@ public class TimeTableService
         _handler = handler;
     }
 
-    public bool SetGroup(string course, string groupNumber)
+    public void SetGroup(string course, string groupNumber)
     {
-        Console.WriteLine($"{course}-{groupNumber}");
-        Console.WriteLine(!_handler.CheckGroupTimeTable(course, groupNumber));
-        var confirm = true;
-        if (!_handler.CheckGroupTimeTable(course, groupNumber))
-        {
-            confirm = false;
-            if (_handler.ParseNewTimeTable(course, groupNumber))
-            {
-                return true;
-            }
-        }
+        _timeTable = _handler.GetGroupTimeTable(course, groupNumber);
+    }
 
-        if (confirm)
-        {
-            _timeTable = _handler.GetGroupTimeTable(course, groupNumber);
-        }
-
-        return confirm;
+    public bool TryCacheGroup(GroupNumber groupNumber)
+    {
+        return _handler.TryParse(groupNumber);
     }
     
     public TimeTable TimeTable => _timeTable;

@@ -4,13 +4,13 @@ namespace WebIsland;
 
 public class TimeTableHandler
 {
-    private Dictionary<string, TimeTable> _tables = new Dictionary<string, TimeTable>();
+    private Dictionary<string, TimeTable> _tables = new ();
     
-    private TimeTable? ParseTimetable(string groupNumber)
+    private TimeTable? ParseTimetable(GroupNumber groupNumber)
     {
         var clinet = new HttpClient();
         var options = new JsonSerializerOptions();
-        options.Converters.Add(new TimeTableParser(groupNumber));
+        options.Converters.Add(new TimeTableParser($"{groupNumber.Course}-{groupNumber.Number}"));
         TimeTable? result = null;
         try
         {
@@ -24,26 +24,34 @@ public class TimeTableHandler
         return result;
     }
 
-    public bool CheckGroupTimeTable(string course, string groupNumber)
+    private bool CheckGroupTimeTable(GroupNumber groupNumber)
     {
-        return _tables.ContainsKey($"{course}-{groupNumber}");
+        return _tables.ContainsKey($"{groupNumber.Course}-{groupNumber.Number}");
     }
 
-    public TimeTable? GetGroupTimeTable(string course, string groupNumber)
+    public TimeTable GetGroupTimeTable(string course, string groupNumber)
     {
         return _tables[$"{course}-{groupNumber}"];
     }
 
-    public bool ParseNewTimeTable(string course, string groupNumber)
+    public bool TryParse(GroupNumber groupNumber)
     {
-        var table = ParseTimetable($"{course}-{groupNumber}");
-        if (table is not null)
+        var result = false;
+        if (!CheckGroupTimeTable(groupNumber))
         {
-            _tables.Add($"{course}-{groupNumber}", table);
-            return true;
+            var timeTable = ParseTimetable(groupNumber);
+            if (timeTable is not null)
+            {
+                result = true;
+                _tables.Add($"{groupNumber.Course}-{groupNumber.Number}", timeTable);
+            }
+        }
+        else
+        {
+            result = true;
         }
 
-        return false;
+        return result;
     }
 
 }
