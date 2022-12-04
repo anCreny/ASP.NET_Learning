@@ -41,7 +41,6 @@ public class CookiePassMiddleWare
                         if (timeTableService.TryCacheGroup(gNumber))
                         {
                             context.Response.Cookies.Append("number", groupNumber);
-                            context.Response.Redirect("/", true);
                         }
                         else
                         {

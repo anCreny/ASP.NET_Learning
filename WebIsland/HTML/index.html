@@ -4,9 +4,22 @@
     <meta charset="UTF-8">
     <title>Main</title>
     <style>
-        body { height: 98%; background: #242424; font-family: Calibri;}
-        button { height: 100%; width: 49%; display: inline-block; border: 0; background: #363636; color: white; font-size: 60px}
-        button:hover{ background: #3e3e3e }
+        body { 
+            height: 98%; 
+            background: #242424; 
+            font-family: Calibri;
+        }
+        button { height: 100%; 
+            width: 49%; 
+            display: inline-block;
+            border: 0;
+            background: #363636;
+            color: white;
+            font-size: 60px
+        }
+        button:hover{ 
+            background: #3e3e3e 
+        }
         .groupNumber{
             text-align: center;
             color: aquamarine;
@@ -18,11 +31,162 @@
             text-decoration-thickness: 3px;
             cursor: pointer;
         }
-    </style>
+        
+        .menu{
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            font-size: 30px;
+            width: 100%;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 10%;
+            transition: 0.5s;
+            border-radius: 0 0 10px 10px;
+            background-color: #363636;
+            transform: translateY(-100%);
+            color:white;
+            overflow: hidden;
+
+        }
+        .menu-active{
+            transform: translateY(0%);
+        }
+        .btn{
+            height: 5vh;
+            width: 20vh;
+            border-radius: 10px;
+            font-size: 30px;
+            margin-left: 15px;
+        }
+        .numbers{
+            display: flex;
+            height: 40px;
+            width: 25%;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .courseNumber{
+            width: 4vh;
+            height: 4vh;
+            display: inline-flex;
+            border-radius: 50%;
+            justify-content: center;
+            border: 0 solid #242424;
+            padding: calc((4vh - 4vh / 1.4142) / 2);
+            align-items: center;
+            background-color: inherit;
+        }
+        
+        .courseNumber:hover{
+            cursor: pointer;
+        }
+         
+        .circle-active{
+            background-color: #444444;
+        }
+        
+        .select{
+            width: 25%;
+            display: flex;
+            justify-content: center;
+        }
+        input[type=number]{
+            background-color: #303030;
+            border: 0;
+            margin-left: 5px;
+            border-radius: 5px;
+            color: white;
+            font-size: inherit;
+            max-width: 25%;
+            scrollbar-arrow-color: transparent;
+            padding-left: 7px;
+        }
+        ::-webkit-outer-spin-button, 
+        ::-webkit-inner-spin-button{
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .loading{
+            position: fixed;
+            z-index: 110;
+            height: 100%;
+            width: 100%;
+            border-radius: 0 0 10px 10px;
+            opacity: 90%;
+            background-color: #363636;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+            margin-top: 5px;
+        }
+
+        .block {
+            position: relative;
+            box-sizing: border-box;
+            float: left;
+            margin: 0 1.1vh 1.1vh 0;
+            width: 0.65vw;
+            height: 0.65vw;
+            border-radius: 3px;
+            background: #FFF;
+        }
+
+        .block:nth-child(10n+1) { animation: wave 2s ease .0s infinite; }
+        .block:nth-child(10n+2) { animation: wave 2s ease .1s infinite; }
+        .block:nth-child(10n+3) { animation: wave 2s ease .2s infinite; }
+        .block:nth-child(10n+4) { animation: wave 2s ease .3s infinite; }
+        .block:nth-child(10n+5) { animation: wave 2s ease .4s infinite; }
+        .block:nth-child(10n+6) { animation: wave 2s ease .5s infinite; }
+        .block:nth-child(10n+7) { animation: wave 2s ease .6s infinite; }
+        .block:nth-child(10n+8) { animation: wave 2s ease .7s infinite; }
+        .block:nth-child(10n+9) { animation: wave 2s ease .8s infinite; }
+        .block:nth-child(10n+10) { animation: wave 2s ease .9s infinite; }
+
+        @keyframes wave {
+            0%   { top: 0;     opacity: 1; }
+            50%  { opacity: .2; }
+            100% { top: 0;     opacity: 1; }
+        }
+        
+        .error{
+            color: red;
+        }
+</style>
 </head>
     <body>
     <div>
-        <div class="groupNumber" >You're in <span id="gn" onclick="window.location.href='/settings'"></span></div>
+        <div class="menu">
+            <div id="blur" style="display: none" class="loading">
+                <h1 class="error" id="error" style="display: none">Invalid parameters</h1>
+            </div>
+            <div class="numbers">
+                <div style="color: aquamarine;">Course:</div>
+                <div id="1" class="courseNumber" onclick="changeGroupNumber(1)">1</div>
+                <div id="2" class="courseNumber" onclick="changeGroupNumber(2)">2</div>
+                <div id="3" class="courseNumber" onclick="changeGroupNumber(3)">3</div>
+                <div id="4" class="courseNumber" onclick="changeGroupNumber(4)">4</div>
+            </div>
+            <div class="select">
+                <div style="color:aquamarine">Number:</div>
+                <input id="number" type="number"/>
+            </div>
+            <button class="btn" onclick="submit()">Submit</button>
+            <button onclick="{
+                document.querySelector('.menu').classList.remove('menu-active');
+            }" class="btn">Hide</button>
+        </div>
+        <div class="groupNumber" >You're in <span id="gn" onclick="{
+            wipeGroupNumber();
+            document.querySelector('.menu').classList.add('menu-active');
+        }"></span></div>
     </div>
     <div style="text-align: center; height: 90.6%">
         <button id="schedule" style="border-bottom-left-radius: 10px; border-top-left-radius: 10px" >Schedule</button>
@@ -33,6 +197,60 @@
     document.getElementById("schedule").addEventListener("click", () => window.location.href = "/schedule");
     document.getElementById("today").addEventListener("click", () => window.location.href = "/today?day=0");
     document.getElementById("gn").innerText = " " + document.cookie.split("=")[1];
+    function changeColor(id){
+        for (let i = 1; i < 5; i++){
+            if (i === Number(id)){
+                document.getElementById(i.toString()).classList.add('circle-active');
+            }
+            else{
+                document.getElementById(i.toString()).classList.remove('circle-active');
+            }
+        }
+    }
     
+    let groupNumber;
+    function changeGroupNumber(id){
+        changeColor(id);
+        groupNumber[0] = id;
+    }
+    function wipeGroupNumber(){
+        groupNumber = document.cookie.split("=")[1].split("-");
+        changeGroupNumber(groupNumber[0])
+        document.getElementById("number").value = groupNumber[1];
+    }
+    async function submit(){
+        document.getElementById("blur").style.display = "flex";
+        groupNumber[1] = document.getElementById("number").value;
+        
+        const response = await fetch("settings/api", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                course: groupNumber[0].toString(),
+                number: groupNumber[1].toString()
+            })
+        });
+        console.log("111");
+        
+        if (response.status === 11 || response.ok !== true)
+        {
+            showError();
+        }
+        else
+        {
+            document.getElementById("gn").innerText = groupNumber[0] + "-" + groupNumber[1];
+            document.getElementById("blur").style.display = "none"
+            setTimeout(() => {document.querySelector('.menu').classList.remove('menu-active');
+            }, 300)
+        }
+    }
+    
+    function showError(){
+        document.getElementById("error").style.display = "block"
+        setTimeout(() => {
+            document.getElementById("error").style.display = "none"
+            document.getElementById("blur").style.display = "none"
+        }, 1000)
+    }
 </script>
 </html>

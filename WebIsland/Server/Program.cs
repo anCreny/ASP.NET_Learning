@@ -10,13 +10,9 @@ var app = builder.Build();
 
 app.UseCookieChecker();
 
-app.Map("/settings", _ =>
+app.Map("/settings/api", _ =>
 {
-    _.Map("/api", __ =>
-        {
-            __.UseSettingAPI();
-        })
-        .UseSettings();
+    _.UseSettingsAPI();
 });
 
 app.Map("/schedule", _ =>
@@ -46,7 +42,21 @@ app.Map("/today", _ =>
 
 app.Run(async (c) =>
 {
-    await c.Response.SendFileAsync("HTML/index.html");
+    var isMobile = false;
+    foreach (var value in c.Request.Headers["User-Agent"])
+    {
+        isMobile = value.Contains("Mobile");
+    }
+
+    if (isMobile)
+    {
+        await c.Response.SendFileAsync("HTML/MobileMain.html");
+    }
+    else
+    {
+        await c.Response.SendFileAsync("HTML/index.html");
+    }
+    Console.WriteLine(isMobile ? "MOBILE" : "PC");
 });
 
 app.Run();

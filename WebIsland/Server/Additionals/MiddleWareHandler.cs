@@ -40,17 +40,7 @@ public static class MiddleWareHandler
         return builder.UseMiddleware<CookiePassMiddleWare>();
     }
 
-    public static IApplicationBuilder UseGroupNumberAPI(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<GroupNumberAPIMiddleWare>();
-    }
-
-    public static IApplicationBuilder UseSettings(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<SettingsMiddleWare>();
-    }
-
-    public static IApplicationBuilder UseSettingAPI(this IApplicationBuilder builder)
+    public static IApplicationBuilder UseSettingsAPI(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<SettingsAPIMiddleWare>();
     }
