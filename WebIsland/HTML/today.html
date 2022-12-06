@@ -20,6 +20,7 @@
         .thTimeBar{
             padding: 0;
             vertical-align: baseline;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -159,7 +160,6 @@
                 
                 if (counter !== 0){
                     progressBar.style.borderBottomLeftRadius = "";
-                    progressDiv.style.borderBottomLeftRadius = "";
                 }
                 
                 progressBar = document.createElement("th");
@@ -169,7 +169,6 @@
                 
                 progressDiv = document.createElement("div");
                 progressDiv.id = lesson.time.start;
-                progressDiv.style.borderBottomLeftRadius = "15px";
                 progressDiv.setAttribute("class", "timeBar")
                 progressBar.append(progressDiv);
                 tr.append(progressBar);
@@ -178,7 +177,6 @@
                 table.append(tr);
                 if (counter === 0){
                     progressBar.style.borderTopLeftRadius = "15px";
-                    progressDiv.style.borderTopLeftRadius = "15px";
                 }
                 
                 const startPoint = new Date();

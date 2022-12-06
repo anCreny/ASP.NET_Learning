@@ -40,7 +40,11 @@ public class CookiePassMiddleWare
                         var groupNumber = gNumber.Course + "-" + gNumber.Number;
                         if (timeTableService.TryCacheGroup(gNumber))
                         {
-                            context.Response.Cookies.Append("number", groupNumber);
+                            var options = new CookieOptions()
+                            {
+                                Expires = DateTimeOffset.MaxValue
+                            };
+                            context.Response.Cookies.Append("number", groupNumber, options);
                         }
                         else
                         {
@@ -55,7 +59,7 @@ public class CookiePassMiddleWare
             }
             else
             {
-                await context.Response.SendFileAsync("HTML/groupChoosing.html");
+                await context.Response.SendFileAsync("HTML/welcome.html");
             }
         }
     }

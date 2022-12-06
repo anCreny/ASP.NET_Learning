@@ -19,7 +19,11 @@ public class SettingsAPIMiddleWare
                 if (timeTableService.TryCacheGroup(groupNumber))
                 {
                     context.Response.Cookies.Delete("number");
-                    context.Response.Cookies.Append("number", $"{groupNumber.Course}-{groupNumber.Number}");
+                    var options = new CookieOptions()
+                    {
+                        Expires = DateTimeOffset.MaxValue
+                    };
+                    context.Response.Cookies.Append("number", $"{groupNumber.Course}-{groupNumber.Number}", options);
                 }
                 else
                 {
