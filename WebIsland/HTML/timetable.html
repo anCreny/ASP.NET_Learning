@@ -20,12 +20,14 @@
             background: #363636; 
             padding: 4px;
         }
-        td {color: white; 
+        td {
+            color: white; 
             background: #363636; 
             padding: 6px; 
             min-width: 120px; 
-            max-width: 175px; 
-            min-height: 80px
+            max-width: 175px;
+            min-height: 80px;
+            overflow: hidden;
         }
         button {display: inline-block; 
             border: 0; 
@@ -94,7 +96,7 @@
                 break;
             }
         }
-        if (!lesson.name.toString().includes("День самостоятельной работ")) {
+        
             if (isExists === true) {
                 localMass[weekday] = createCell(lesson);
                 isExists = false;
@@ -103,7 +105,7 @@
                 massive[weekday] = createCell(lesson);
                 table[week - 1].push(massive);
             }
-        }
+        
     }
     
     function createCell(lesson){
@@ -119,12 +121,12 @@
                 data += "3";
                 break;
             default:
-                data += 0;
+                data += "0";
                 break;
         }
-        data += lesson.name + "[" + lesson.type + "]" + "\n";
-        lesson.audience.forEach( a => data += a.audience + "\n");
-        lesson.teachers.forEach( t => data += t.teacher + "\n");
+        data += lesson.name + (lesson.type === "—" ? "" : ("[" + lesson.type + "]" )) + "\n";
+        lesson.audience.forEach( a => data += a.audience === "—" ? "" : a.audience + "\n");
+        lesson.teachers.forEach( t => data += t.teacher === "—" ? "" : t.teacher + "\n");
         return data;
     }
     
@@ -175,6 +177,9 @@
                         case "3":
                             color = "#735252";
                             break;
+                        case "0":
+                            color = "rgb(129 129 129)";
+                            break;
                     }
                     td.style.backgroundColor = color;
                     td.innerText = row[i].substring(1);
@@ -205,14 +210,20 @@
     }
     
     function sortLessons(){
-        console.log(table);
+        console.log(table)
         for (const week of table) {
             week.sort(compare);
         }
-        console.log(table);
+        
     }
     
     function compare(timeA, timeB){
+        const time = timeA[0].split(":");
+        const milSeconds = (Number(time[3]) * 60 + Number(time[4])) - (Number(time[0]) * 60 + Number(time[1]));
+        console.log(`${timeA[0]} = ${milSeconds}`);
+        if (milSeconds > 95){
+            return -1;
+        }
         if (Number(timeA[0].split(":")[0]) > Number(timeB[0].split(":")[0])){
             return 1;
         }

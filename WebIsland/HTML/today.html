@@ -140,9 +140,9 @@
                 
                 th.innerText = time[0] + ":" + time[1] + "-\n" + time[3] + ":" + time[4];
                 
-                let content = lesson.name + "[" + lesson.type + "]\n";
-                lesson.audience.forEach(a => content += a.name + "\n");
-                lesson.teachers.forEach(t => content += t.name + "\n");
+                let content = lesson.name + (lesson.type === "—" ? "" : ("[" + lesson.type + "]" )) + "\n";
+                lesson.audience.forEach(a => content += a.name === "—" ? "" : a.name + "\n");
+                lesson.teachers.forEach(t => content += t.name === "—" ? "" : t.name + "\n");
                 console.log(content);
                 td.innerText = content;
 
@@ -156,6 +156,8 @@
                     case "лк.":
                         td.style.backgroundColor = "#657352";
                         break;
+                    case "—":
+                        td.style.backgroundColor = "rgb(129 129 129)";
                 }
                 
                 if (counter !== 0){

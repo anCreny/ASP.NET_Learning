@@ -1,3 +1,4 @@
+using WebIsland.Server.Logs;
 using WebIsland.Server.Services;
 
 namespace WebIsland.Server.MiddleWare;
@@ -11,8 +12,9 @@ public class CookiePassMiddleWare
         _next = next;
     }
 
-    public async Task Invoke(HttpContext context, TimeTableService timeTableService)
+    public async Task Invoke(HttpContext context, TimeTableService timeTableService, Logger logger)
     {
+        logger.LogNumberOfRequests();
         if (context.Request.Cookies.TryGetValue("number", out var number))
         {
             var groupNumber = number.Split("-");

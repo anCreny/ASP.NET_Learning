@@ -80,8 +80,13 @@
             position: absolute;
             height: 100%;
             background-color: #496ee8;
-            width: 83.5%;
-            right: 0;
+            width: 67%;
+            font-size: 2.5vh;
+            right: 16.5%;
+            color: black !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .author{
             position: absolute;
@@ -126,12 +131,16 @@
             height: 20%;
             font-size: 3.25vh;
             width: 120%;
+            overflow: hidden;
         }
         .about-text{
             position: absolute;
             height: 100%;
             background-color: #496ee8;
-            width: 90%;
+            width: 67%;
+            left: 0;
+            padding: 5px;
+            font-size: 2vh;
         }
         .about{
             position: absolute;
@@ -260,7 +269,6 @@
             justify-content: center;
             border: 0 solid #242424;
             padding: calc((4vh - 4vh / 1.4142) / 2);
-            align-items: center;
             background-color: inherit;
             transition: 0.25s;
         }
@@ -441,7 +449,7 @@
             document.querySelector('.start-container').classList.add('start-container-open');
         }">Lets start</div>
         <div class="author-container">
-            <div class="author-text">SomeText</div>
+            <div class="author-text"><a style="cursor: pointer; color: black; text-decoration: underline" href = 'https://vk.com/artem.bouyrcin'>Студент группы 3-42</a></div>
             <div class="author" onclick="{
                 document.querySelector('.author').classList.toggle('author-open');
             }">
@@ -451,7 +459,7 @@
         </div>
         
         <div class="about-container">
-            <div class="about-text">SomeText</div>
+            <div class="about-text">Данный сайт представляет собой упрощенный доступ к расписанию ИГХТУ любой группы.</div>
             <div class="about" onclick="{
                 document.querySelector('.about').classList.toggle('about-open');
             }">

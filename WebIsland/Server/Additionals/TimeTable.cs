@@ -11,7 +11,6 @@ public class TimeTable
     public void AddSubject(Subject subject)
     {
         _timeTable[subject.Week, subject.WeekDay].Subjects.Add(subject);
-        Console.WriteLine(subject.Week + "|" + subject.WeekDay);
     }
 
     public Day GetDay(DateTime day)

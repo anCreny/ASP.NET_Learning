@@ -1,10 +1,13 @@
 using System.Text.RegularExpressions;
 using WebIsland;
+using WebIsland.Server.Logs;
 using WebIsland.Server.Services;
 
 var builder = WebApplication.CreateBuilder();
+builder.Services.AddSingleton(new Logger("Server/Logs/numberOfRequestsLogs.txt", "Server/Logs/parsedGroupsLogs.txt", new Counter()));
 builder.Services.AddSingleton<TimeTableHandler>();
 builder.Services.AddScoped<TimeTableService>();
+
 
 var app = builder.Build();
 
@@ -56,7 +59,6 @@ app.Run(async (c) =>
     {
         await c.Response.SendFileAsync("HTML/index.html");
     }
-    Console.WriteLine(isMobile ? "MOBILE" : "PC");
 });
 
 app.Run();

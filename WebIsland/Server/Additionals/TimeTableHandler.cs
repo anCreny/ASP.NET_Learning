@@ -1,10 +1,17 @@
 using System.Text.Json;
+using WebIsland.Server.Logs;
 
 namespace WebIsland;
 
 public class TimeTableHandler
 {
     private Dictionary<string, TimeTable> _tables = new ();
+    private Logger _logger;
+
+    public TimeTableHandler(Logger logger)
+    {
+        _logger = logger;
+    }
     
     private TimeTable? ParseTimetable(GroupNumber groupNumber)
     {
@@ -44,6 +51,7 @@ public class TimeTableHandler
             {
                 result = true;
                 _tables.Add($"{groupNumber.Course}-{groupNumber.Number}", timeTable);
+                _logger.LogParsedGroup($"{groupNumber.Course}-{groupNumber.Number}");
             }
         }
         else

@@ -44,12 +44,9 @@ public class TimeTableParser : JsonConverter<TimeTable>
             reader.Read();
             
             if (reader.TokenType != JsonTokenType.StartArray) continue;
-            var counter = 0;
 
             while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
             {
-                counter++;
-                Console.WriteLine(counter);
                 if (reader.TokenType == JsonTokenType.StartObject)
                 {
                     while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
