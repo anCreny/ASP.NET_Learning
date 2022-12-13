@@ -13,9 +13,26 @@ public class TodayApiMiddleWare
 
     public async Task Invoke(HttpContext context, TimeTableService timeTableService)
     {
-        var dayOffset = Convert.ToInt32(context.Request.Path.ToString().Split("/")[2]);
+        var offset = 0;
+        try
+        {
+            var dayOffset = await context.Request.ReadFromJsonAsync<DayOffset>();
+            if (dayOffset is not null)
+            {
+                offset = dayOffset.Offset;
+                Console.WriteLine(offset);
+            }
+            else
+            {
+                Console.WriteLine("null");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
         var today = DateTime.Today;
-        today = today.AddDays(Convert.ToInt32(dayOffset));
+        today = today.AddDays(offset);
         var currentDay = timeTableService.TimeTable.GetDay(today);
 
         var options = new JsonSerializerOptions();
@@ -23,4 +40,6 @@ public class TodayApiMiddleWare
             
         await context.Response.WriteAsJsonAsync(currentDay, options);
     }
+    private record DayOffset(int Offset);
 }
+

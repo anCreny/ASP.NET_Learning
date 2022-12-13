@@ -27,12 +27,10 @@
             margin: 0;
         }
         
-        
         .btn1{
             top: 0;
             transition: 0.5s;
         }
-        
         
         .btn2{
             transition: 0.5s;
@@ -165,11 +163,11 @@
 <body>
 
 <div class="wrapper">
-    <button id="today" class="btn1" onclick="location.href = '/today?day=0'">Today</button>
+    <button id="today" class="btn1" onclick="location.href = '/today'">Today</button>
     <div id="gn" class="groupNumber" onclick="{
         document.getElementById('menu').classList.toggle('menu-active');
         wipeGroupNumber();
-    }">You're in<span id="groupNumber"></span></div>
+    }"><span id="groupNumber"></span></div>
     <button id="schedule" class="btn2" onclick="location.href = '/schedule'">Schedule</button>
     <div id="menu" class="menu">
         <div style="display: none" id="blur" class="blur">

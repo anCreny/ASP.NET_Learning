@@ -41,13 +41,15 @@
 
         
     <table id="allday" style="justify-content: center; margin: auto">
-        <tr>
-            <th style="background-color: #242424"></th>
-            <th style="border-top-left-radius: 15px" id="time">Time</th>
-            <th style="border-top-right-radius: 15px" id="lesson">Lessons</th>
-        </tr>
+        <tbody id="tbody">
+            <tr>
+                <th style="background-color: #242424"></th>
+                <th style="border-top-left-radius: 15px" id="time">Time</th>
+                <th style="border-top-right-radius: 15px" id="lesson">Lessons</th>
+            </tr>
+        </tbody>
     </table>
-    
+        
     </div>
     <div style="text-align: center; flex: 0 0 auto">
         <button id="yesterday" style="display: inline-block; justify-content: left; border-bottom-left-radius: 25px; border-top-left-radius: 25px">
@@ -59,29 +61,66 @@
         </button>
     </div>
     <script>
-            let dates = [];
+            let offset = 0;
         
+            let dates = [];
+
+            function refreshTable(){
+                counter = 0;
+                dates = [];
+                const table = document.getElementById("allday");
+                const tbody = document.getElementById("tbody");
+                tbody.remove();
+                const newTbody = document.createElement("tbody");
+                newTbody.id = "tbody";
+                table.style.display = "table";
+                
+                const tr = document.createElement("tr");
+                
+                const th1 = document.createElement("th");
+                const th2 = document.createElement("th");
+                const th3 = document.createElement("th");
+                
+                th1.style.backgroundColor = "#242424";
+                
+                th2.style.borderTopLeftRadius = "15px";
+                th2.id = "time";
+                th2.innerText = "Time";
+                
+                th3.style.borderTopRightRadius = "15px";
+                th3.id = "lesson";
+                th3.innerText = "Lessons"
+                
+                tr.append(th1);
+                tr.append(th2);
+                tr.append(th3);
+                
+                newTbody.append(tr);
+                table.append(newTbody);
+            }
+            
             document.getElementById("tomorrow").addEventListener("click", () => {
-               const params = getQueryParams(location.href);
-               const dayOffset = params['day'];
-               location.href = `today?day=${Number(dayOffset) + 1}`;
+                offset += 1;
+                refreshTable();
+                GetDay();
             });
             
             document.getElementById("yesterday").addEventListener("click", () => {
-                const params = getQueryParams(location.href);
-                const dayOffset = params['day'];
-                location.href = `today?day=${Number(dayOffset) - 1}`;
+                offset -= 1;
+                refreshTable();
+                GetDay();
             })
             
             const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
             
             async function GetDay(){
-                const params = getQueryParams(location.href);
-                const dayOffset = params['day'];
                 
-                const response = await fetch(`/today/api/${dayOffset}`, {
-                    method: "GET",
-                    headers: {"Accept" : "application/json"}
+                const response = await fetch(`/today/api`, {
+                    method: "POST",
+                    headers: {"Accept" : "application/json", "Content-Type" : "application/json"},
+                    body: JSON.stringify({
+                        offset: Number(offset)
+                    })
                 });
                 
                 if (response.ok === true){
@@ -90,16 +129,9 @@
                     setInterval(startCheckProgress, 100);
                 }
             }
-            function getQueryParams(url) {
-                const paramArr = url.slice(url.indexOf('?') + 1).split('&');
-                const params = {};
-                paramArr.map(param => {
-                    const [key, val] = param.split('=');
-                    params[key] = decodeURIComponent(val);
-                })
-                return params;
-            }
             
+            let counter = 0;
+
             function SetDay(day){
                 if (day.weekday === -1) {
                     document.getElementById("day").innerText = "Sunday"
@@ -118,19 +150,18 @@
                 }
                 document.getElementById("week").innerText = week;
                 if (day.weekday === -1 || day.subjects.length === 0){
-                    document.getElementById("allday").remove();
+                    document.getElementById("allday").style.display = "none";
                 }else{
                     day.subjects.forEach( _ => SetLesson(_))
                 }
             }
             let td = document.getElementById("lesson");
-            let counter = 0;
             let progressBar;
             let progressDiv;
             
             function SetLesson(lesson){
                 td.style.borderBottomRightRadius = ""
-                const table = document.getElementById("allday");
+                const table = document.getElementById("tbody");
                 const tr = document.createElement("tr");
                 const th = document.createElement("th");
                 td = document.createElement("td");
@@ -183,10 +214,10 @@
                 
                 const startPoint = new Date();
                 startPoint.setHours(Number(time[0]), Number(time[1]));
-                startPoint.setTime(startPoint.getTime() + (Number(getQueryParams(location.href)['day']) * 24 * 60 * 60 * 1000));
+                startPoint.setTime(startPoint.getTime() + (Number(offset) * 24 * 60 * 60 * 1000));
                 const endPoint = new Date();
                 endPoint.setHours(Number(time[3]), Number(time[4]));
-                endPoint.setTime(endPoint.getTime() + (Number(getQueryParams(location.href)['day']) * 24 * 60 * 60 * 1000));
+                endPoint.setTime(endPoint.getTime() + (Number(offset) * 24 * 60 * 60 * 1000));
                 
                 
                 let m = [startPoint, endPoint, progressDiv.id];

@@ -34,12 +34,11 @@ app.Map("/test", _ =>
 
 app.Map("/today", _ =>
 {
-    _.MapWhen(
-        context => Regex.IsMatch(context.Request.Path, "^/api/([(-9)-9]+)$"), __ =>
+    _.Map(
+        "/api", __ =>
     {
         __.UseTodayAPI();
     })
-    .UseCachingError()
     .UseToday();
 });
 
