@@ -50,6 +50,7 @@ public class TimeTableHandler
             if (timeTable is not null)
             {
                 result = true;
+                if (_tables.ContainsKey($"{groupNumber.Course}-{groupNumber.Number}")) return result;
                 _tables.Add($"{groupNumber.Course}-{groupNumber.Number}", timeTable);
                 _logger.LogParsedGroup($"{groupNumber.Course}-{groupNumber.Number}");
             }
