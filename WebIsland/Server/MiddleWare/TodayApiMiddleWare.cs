@@ -20,12 +20,8 @@ public class TodayApiMiddleWare
             if (dayOffset is not null)
             {
                 offset = dayOffset.Offset;
-                Console.WriteLine(offset);
             }
-            else
-            {
-                Console.WriteLine("null");
-            }
+
         }
         catch (Exception e)
         {

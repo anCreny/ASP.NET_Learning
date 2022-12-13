@@ -22,6 +22,6 @@ public class Logger
 
     public async void LogParsedGroup(string groupNumber)
     {
-        await File.AppendAllTextAsync(_parserPath, $"[{DateTime.Now.ToShortTimeString()}]: {groupNumber}\n");
+        await File.AppendAllTextAsync(_parserPath, $"[{DateTime.Now.Hour}:{ (DateTime.Now.Minute < 10 ? $"0{DateTime.Now.Minute}" : DateTime.Now.Minute)}]: {groupNumber}\n");
     }
 }
