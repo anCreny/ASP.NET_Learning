@@ -131,7 +131,6 @@
     }
     
     function drawTable(){
-        console.log(table);
         const htmlTable = document.getElementById("table");
         
         for (let i = 0; i < 2; i++){
@@ -201,28 +200,32 @@
         let today = new Date();
         let start = new Date();
         start.setMonth(8, 5);
-        console.log(start);
         let week = Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 7)) % 2 + 1;
         week = 3 - week;
-        console.log(week);
         const weekLable = document.getElementById("week" + week);
         weekLable.style.backgroundColor = "#577292";
     }
     
     function sortLessons(){
-        console.log(table)
         for (const week of table) {
+            console.log(week);
             week.sort(compare);
         }
         
     }
     
     function compare(timeA, timeB){
-        const time = timeA[0].split(":");
-        const milSeconds = (Number(time[3]) * 60 + Number(time[4])) - (Number(time[0]) * 60 + Number(time[1]));
-        console.log(`${timeA[0]} = ${milSeconds}`);
-        if (milSeconds > 95){
+        console.log(timeA, timeB);
+        const timesA = timeA[0].split(":");
+        const minutesA = (Number(timesA[3]) * 60 + Number(timesA[4])) - (Number(timesA[0]) * 60 + Number(timesA[1]));
+        const timesB = timeB[0].split(":");
+        const minutesB = (Number(timesB[3]) * 60 + Number(timesB[4])) - (Number(timesB[0]) * 60 + Number(timesB[1]));
+        //console.log(`${timeA[0]} = ${minutes}`);
+        if (minutesA > 95){
             return -1;
+        }
+        if (minutesB > 95){
+            return 1;
         }
         if (Number(timeA[0].split(":")[0]) > Number(timeB[0].split(":")[0])){
             return 1;
