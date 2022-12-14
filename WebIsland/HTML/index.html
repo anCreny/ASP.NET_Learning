@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+</head>
+    <body>
+        <div id="new">
+            <h2>You're a new client <br/> please, enter your number</h2>
+            <input id="numberPlace"/>
+            <button onclick="setNumber()">Set Number</button>
+        </div>
+    </body>
+<script>
+    
+    async function setNumber(){
+        const respone = await fetch("/api", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                value: document.getElementById("numberPlace").value
+            })
+        })
+    }
+</script>
+</html>
