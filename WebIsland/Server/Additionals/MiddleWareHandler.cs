@@ -44,4 +44,9 @@ public static class MiddleWareHandler
     {
         return builder.UseMiddleware<SettingsAPIMiddleWare>();
     }
+
+    public static IApplicationBuilder UseNamesCatching(this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<NamesMiddleWare>();
+    }
 }

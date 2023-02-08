@@ -13,17 +13,17 @@ public class SettingsAPIMiddleWare
     {
         try
         {
-            var groupNumber = await context.Request.ReadFromJsonAsync<GroupNumber>();
+            var groupNumber = await context.Request.ReadFromJsonAsync<Value>();
             if (groupNumber is not null)
             {
                 if (timeTableService.TryCacheGroup(groupNumber))
                 {
-                    context.Response.Cookies.Delete("number");
+                    context.Response.Cookies.Delete("value");
                     var options = new CookieOptions()
                     {
                         Expires = DateTimeOffset.MaxValue
                     };
-                    context.Response.Cookies.Append("number", $"{groupNumber.Course}-{groupNumber.Number}", options);
+                    context.Response.Cookies.Append("value", $"{groupNumber.LeftPart}-{groupNumber.RightPart}", options);
                 }
                 else
                 {

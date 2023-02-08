@@ -262,7 +262,14 @@
                 <div style="color:aquamarine">Number:</div>
                 <input id="number" type="number"/>
             </div>
-            <button class="btn" onclick="submit()">Submit</button>
+            <button class="btn" onclick="
+            {
+                let data = [];
+                data.push(groupNumber[0].toString());
+                data.push(document.getElementById('number').value.toString());
+                submit(data);
+            }
+            ">Submit</button>
             <button onclick="{
                 document.querySelector('.menu').classList.remove('menu-active');
             }" class="btn">Hide</button>
@@ -280,7 +287,23 @@
 <script>
     document.getElementById("schedule").addEventListener("click", () => window.location.href = "/schedule");
     document.getElementById("today").addEventListener("click", () => window.location.href = "/today");
-    document.getElementById("gn").innerText = " " + document.cookie.split("=")[1];
+    const value = document.cookie.split("=")[1].split("-");
+    if (value[1].includes(".")){
+        document.getElementById("gn").innerText = decode(value[0]) + " " + decode(value[1]);
+    }
+    else{
+        document.getElementById("gn").innerText = value[0] + "-" + value[1]
+    }
+    
+    function decode(data){
+        let result = "";
+        const separateData = data.split(".");
+        for (const encodedSymbol of separateData) {
+            result += String.fromCharCode(Number(encodedSymbol));
+        }
+        return result;
+    }
+    
     function changeColor(id){
         for (let i = 1; i < 5; i++){
             if (i === Number(id)){
@@ -302,20 +325,18 @@
         changeGroupNumber(groupNumber[0])
         document.getElementById("number").value = groupNumber[1];
     }
-    async function submit(){
+    async function submit(data){
         document.getElementById("blur").style.display = "flex";
         document.getElementById('loading').style.display = "block";
-        groupNumber[1] = document.getElementById("number").value;
         
         const response = await fetch("settings/api", {
             method: "POST",
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify({
-                course: groupNumber[0].toString(),
-                number: groupNumber[1].toString()
+                leftPart: data[0],
+                rightPart: data[1]
             })
         });
-        console.log("111");
         
         if (response.status === 11 || response.ok !== true)
         {
@@ -323,7 +344,7 @@
         }
         else
         {
-            document.getElementById("gn").innerText = groupNumber[0] + "-" + groupNumber[1];
+            document.getElementById("gn").innerText = data[0] + "-" + data[1];
             document.getElementById("blur").style.display = "none"
             document.getElementById('loading').style.display = "none";
             setTimeout(() => {document.querySelector('.menu').classList.remove('menu-active');

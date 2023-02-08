@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using WebIsland;
 using WebIsland.Server.Logs;
 using WebIsland.Server.Services;
@@ -7,11 +6,17 @@ var builder = WebApplication.CreateBuilder();
 builder.Services.AddSingleton(new Logger("Server/Logs/numberOfRequestsLogs.txt", "Server/Logs/parsedGroupsLogs.txt", new Counter()));
 builder.Services.AddSingleton<TimeTableHandler>();
 builder.Services.AddScoped<TimeTableService>();
-
-
+builder.Services.AddSingleton(new TeachersNamesHandler());
 var app = builder.Build();
 
+
+
 app.UseCookieChecker();
+
+app.Map("/names/api", _ =>
+{
+    _.UseNamesCatching();
+});
 
 app.Map("/settings/api", _ =>
 {

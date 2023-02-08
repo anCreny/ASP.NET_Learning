@@ -13,11 +13,20 @@ public class TimeTableHandler
         _logger = logger;
     }
     
-    private TimeTable? ParseTimetable(GroupNumber groupNumber)
+    private TimeTable? ParseTimetable(Value value)
     {
         var clinet = new HttpClient();
         var options = new JsonSerializerOptions();
-        options.Converters.Add(new TimeTableParser($"{groupNumber.Course}-{groupNumber.Number}"));
+        if (value.RightPart.Contains("."))
+        {
+            var surname = Encoder.Decode(value.LeftPart);
+            var otherName = Encoder.Decode(value.RightPart);
+            options.Converters.Add(new TeacherParser($"{surname} {otherName}"));
+        }
+        else
+        {
+            options.Converters.Add(new TimeTableParser($"{value.LeftPart}-{value.RightPart}"));
+        }
         TimeTable? result = null;
         try
         {
@@ -31,28 +40,28 @@ public class TimeTableHandler
         return result;
     }
 
-    private bool CheckGroupTimeTable(GroupNumber groupNumber)
+    private bool CheckGroupTimeTable(Value value)
     {
-        return _tables.ContainsKey($"{groupNumber.Course}-{groupNumber.Number}");
+        return _tables.ContainsKey($"{value.LeftPart}-{value.RightPart}");
     }
 
-    public TimeTable GetGroupTimeTable(string course, string groupNumber)
+    public TimeTable GetGroupTimeTable(string valueLeft, string valueRight)
     {
-        return _tables[$"{course}-{groupNumber}"];
+        return _tables[$"{valueLeft}-{valueRight}"];
     }
 
-    public bool TryParse(GroupNumber groupNumber)
+    public bool TryParse(Value value)
     {
         var result = false;
-        if (!CheckGroupTimeTable(groupNumber))
+        if (!CheckGroupTimeTable(value))
         {
-            var timeTable = ParseTimetable(groupNumber);
+            var timeTable = ParseTimetable(value);
             if (timeTable is not null)
             {
                 result = true;
-                if (_tables.ContainsKey($"{groupNumber.Course}-{groupNumber.Number}")) return result;
-                _tables.Add($"{groupNumber.Course}-{groupNumber.Number}", timeTable);
-                _logger.LogParsedGroup($"{groupNumber.Course}-{groupNumber.Number}");
+                if (_tables.ContainsKey($"{value.LeftPart}-{value.RightPart}")) return result;
+                _tables.Add($"{value.LeftPart}-{value.RightPart}", timeTable);
+                _logger.LogParsedGroup($"{value.LeftPart}-{value.RightPart}");
             }
         }
         else

@@ -10,7 +10,20 @@ public class TimeTable
 
     public void AddSubject(Subject subject)
     {
+        if (_timeTable[subject.Week, subject.WeekDay].Subjects.Count != 0)
+        {
+            foreach (var lesson in _timeTable[subject.Week, subject.WeekDay].Subjects)
+            {
+                if (lesson.TimeStart == subject.TimeStart && lesson.TimeEnd == subject.TimeEnd)
+                {
+                    lesson.Teachers.Add(subject.Teachers[0]);
+                    return;
+                }
+            }
+        }
+
         _timeTable[subject.Week, subject.WeekDay].Subjects.Add(subject);
+        
     }
 
     public Day GetDay(DateTime day)

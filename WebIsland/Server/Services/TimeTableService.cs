@@ -15,9 +15,9 @@ public class TimeTableService
         _timeTable = _handler.GetGroupTimeTable(course, groupNumber);
     }
 
-    public bool TryCacheGroup(GroupNumber groupNumber)
+    public bool TryCacheGroup(Value value)
     {
-        return _handler.TryParse(groupNumber);
+        return _handler.TryParse(value);
     }
     
     public TimeTable TimeTable => _timeTable;

@@ -15,18 +15,19 @@ public class CookiePassMiddleWare
     public async Task Invoke(HttpContext context, TimeTableService timeTableService, Logger logger)
     {
         logger.LogNumberOfRequests();
-        if (context.Request.Cookies.TryGetValue("number", out var number))
+        Console.WriteLine($"{Encoder.Encode("Сизова")}-{Encoder.Encode("О.В.")}");
+        if (context.Request.Cookies.TryGetValue("value", out var number))
         {
-            var groupNumber = number.Split("-");
+            var value = number.Split("-");
 
-            if (timeTableService.TryCacheGroup(new GroupNumber(groupNumber[0], groupNumber[1])))
+            if (timeTableService.TryCacheGroup(new Value(value[0], value[1])))
             {
-                timeTableService.SetGroup(groupNumber[0], groupNumber[1]);
+                timeTableService.SetGroup(value[0], value[1]);
                 await _next.Invoke(context);
             }
             else
             {
-                context.Response.Cookies.Delete("number");
+                context.Response.Cookies.Delete("value");
                 context.Response.Redirect("/", true);
             }
         }
@@ -36,17 +37,17 @@ public class CookiePassMiddleWare
             {
                 try
                 {
-                    var gNumber = await context.Request.ReadFromJsonAsync<GroupNumber>();
+                    var gNumber = await context.Request.ReadFromJsonAsync<Value>();
                     if (gNumber is not null)
                     {
-                        var groupNumber = gNumber.Course + "-" + gNumber.Number;
+                        var groupNumber = gNumber.LeftPart + "-" + gNumber.RightPart;
                         if (timeTableService.TryCacheGroup(gNumber))
                         {
                             var options = new CookieOptions()
                             {
                                 Expires = DateTimeOffset.MaxValue
                             };
-                            context.Response.Cookies.Append("number", groupNumber, options);
+                            context.Response.Cookies.Append("value", groupNumber, options);
                         }
                         else
                         {
@@ -56,7 +57,7 @@ public class CookiePassMiddleWare
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine($"CookiePass[64]:{e.Message}");
                 }
             }
             else

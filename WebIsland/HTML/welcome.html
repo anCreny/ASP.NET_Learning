@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
+    <title>Welcome</title>
     <style>
         *{
             margin: 0;
@@ -492,8 +492,8 @@
             method: "POST",
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify({
-                course: courseNumber.toString(),
-                number: groupNumber.toString()
+                leftPart: courseNumber.toString(),
+                rightPart: groupNumber.toString()
             })
         })
         if (response.status === 200)

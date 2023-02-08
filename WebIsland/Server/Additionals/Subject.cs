@@ -15,8 +15,8 @@ public class Subject
         LessonEnd = lessonEnd;
         Week = week;
         WeekDay = weekDay;
-        Audience = audience;
-        Teachers = teachers;
+        Audience = new List<string>(audience);
+        Teachers = new List<string>(teachers);
     }
 
     public string Name { get; init; }
@@ -26,7 +26,7 @@ public class Subject
     public string LessonStart { get; init; }
     public string LessonEnd { get; init; }
     public List<string> Audience { get; init; }
-    public List<string> Teachers { get; init; }
+    public List<string> Teachers { get; set; }
 
     public int WeekDay
     {
