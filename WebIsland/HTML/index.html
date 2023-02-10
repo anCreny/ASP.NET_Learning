@@ -391,6 +391,8 @@
             
             <button class="btn" onclick="
             {
+                
+                console.log('inputType:', inputType);
                 if (inputType === 2){
                     let data = [];
                     data.push(groupNumber[0].toString());
@@ -595,7 +597,7 @@
         }
     }
     
-    let groupNumber;
+    let groupNumber = [-1, -1];
     function changeGroupNumber(id){
         changeColor(id);
         groupNumber[0] = id;

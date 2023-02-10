@@ -1,1 +1,1 @@
-Number of requests to the server: 16
+Number of requests to the server: 43
