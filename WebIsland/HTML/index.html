@@ -40,7 +40,7 @@
             width: 100%;
             left: 0;
             display: flex;
-            justify-content: center;
+            justify-content: space-evenly;
             align-items: center;
             height: 10%;
             transition: 0.5s;
@@ -61,10 +61,15 @@
             font-size: 30px;
             margin-left: 15px;
         }
+        
+        .btn:hover{
+            color: aquamarine;
+        }
+        
         .numbers{
             display: flex;
             height: 40px;
-            width: 25%;
+            width: 50%;
             justify-content: space-around;
             align-items: center;
         }
@@ -89,7 +94,7 @@
         }
         
         .select{
-            width: 25%;
+            width: 50%;
             display: flex;
             justify-content: center;
         }
@@ -100,7 +105,7 @@
             border-radius: 5px;
             color: white;
             font-size: inherit;
-            max-width: 25%;
+            max-width: 12%;
             scrollbar-arrow-color: transparent;
             padding-left: 7px;
         }
@@ -109,6 +114,33 @@
             -webkit-appearance: none;
             margin: 0;
         }
+        
+        input[type=text]{
+            background-color: #303030;
+            color: aquamarine;
+            width: 90%;
+            position: relative;
+            height: 80%;
+            border-radius: 10px;
+            border: 0;
+            z-index: 100;
+            font-size: inherit;
+            font-family: inherit;
+            padding: 0;
+            padding-left: 3px;
+        }
+        
+        .inputClues{
+            border-radius: 0 !important;
+            border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;
+        }
+        
+        input[type=text]:focus{
+            outline: none !important;
+            border: 0;
+        }
+        
         .loading{
             position: fixed;
             z-index: 110;
@@ -121,6 +153,26 @@
             justify-content: center;
             align-items: center;
         }
+        
+        .inputType{
+            width: 50%;
+            display: flex;
+            height: 80%;
+            border-radius: 10px;
+            background-color: #292929;
+            justify-content: center;
+            overflow: hidden;
+            padding-left: 10px;
+        }
+        
+        .groupInput{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        
         .container {
             width: 100%;
             height: 100%;
@@ -242,32 +294,122 @@
                 transform: scale(1.5);
             }
         }
-</style>
+
+        .rightChangeButton {
+            text-align: center;
+            width: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: inherit;
+            font-size: inherit;
+            border-bottom-right-radius: 10px;
+            border-top-right-radius: 10px;
+            
+        }
+        .rightChangeButton:hover{
+           background-color: #3e3e3e;
+            cursor: pointer;
+        }
+
+        .teacherInput {
+            width: 100%;
+            display: flex;
+            height: 100%;
+            position: absolute;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .inputTypeChanger {
+            width: 80%;
+            height: 100%;
+            position: relative;
+        }
+
+        .teachers {
+            width: 90%;
+            position: absolute;
+            top: 0;
+            z-index: 90;
+        }
+        ul li{
+            list-style: none;
+            font-size: inherit;
+            font-family: inherit;
+            cursor: pointer;
+            background-color: #303030;
+            color: white;
+            margin: 0;
+            padding-left: 3px;
+        }
+        ul li:hover{
+            background-color: #323232;
+            color: aquamarine;
+        }
+        
+        ul{
+            margin-left: 0;
+            margin-block-start: 6.5%;
+            padding: 0;
+        }
+        
+    </style>
 </head>
     <body>
     <div>
-        <div class="menu">
+        <div id="menu" class="menu">
             <div id="blur" style="display: none" class="loading">
                 <div style="display: none" id="loading" class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                 <h1 class="error" id="error" style="display: none">Invalid parameters</h1>
             </div>
-            <div class="numbers">
-                <div style="color: aquamarine;">Course:</div>
-                <div id="1" class="courseNumber" onclick="changeGroupNumber(1)">1</div>
-                <div id="2" class="courseNumber" onclick="changeGroupNumber(2)">2</div>
-                <div id="3" class="courseNumber" onclick="changeGroupNumber(3)">3</div>
-                <div id="4" class="courseNumber" onclick="changeGroupNumber(4)">4</div>
+                <div id="inputType" class="inputType">
+                    <div class="inputTypeChanger">
+                        <div id="groupInput" class="groupInput">
+                            <div class="numbers">
+                                <div style="color: aquamarine;">Course:</div>
+                                <div id="1" class="courseNumber" onclick="changeGroupNumber(1)">1</div>
+                                <div id="2" class="courseNumber" onclick="changeGroupNumber(2)">2</div>
+                                <div id="3" class="courseNumber" onclick="changeGroupNumber(3)">3</div>
+                                <div id="4" class="courseNumber" onclick="changeGroupNumber(4)">4</div>
+                            </div>
+                            <div class="select">
+                                <div style="color:aquamarine">Number:</div>
+                                <input id="number" type="number"/>
+                            </div>
+                        </div>
+                        <div id="teacherInput" class="teacherInput">
+                            <input id="input" pattern="hello" type="text" oninput="tryShowList(document.getElementById('input').value)">
+                            <div id="box" class="teachers">
+                                <ul id="clues">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <div class="rightChangeButton" onclick="changeInput()"> <-> </div>
             </div>
-            <div class="select">
-                <div style="color:aquamarine">Number:</div>
-                <input id="number" type="number"/>
-            </div>
+            
             <button class="btn" onclick="
             {
-                let data = [];
-                data.push(groupNumber[0].toString());
-                data.push(document.getElementById('number').value.toString());
-                submit(data);
+                if (inputType === 2){
+                    let data = [];
+                    data.push(groupNumber[0].toString());
+                    data.push(document.getElementById('number').value.toString());
+                    submit(data);
+                }
+                else{
+                    let data = [];
+                    let name = document.getElementById('input').value.split(' ');
+                    if (name.length !== 2){
+                        document.getElementById('blur').style.display = 'flex';
+                        showError();
+                    }
+                    else{
+                        data.push(encode(name[0]));
+                        data.push(encode(name[1]));
+                        submit(data);
+                    }
+                }
             }
             ">Submit</button>
             <button onclick="{
@@ -275,7 +417,7 @@
             }" class="btn">Hide</button>
         </div>
         <div class="groupNumber" ><span id="gn" onclick="{
-            wipeGroupNumber();
+            wipeMenuContent();
             document.querySelector('.menu').classList.add('menu-active');
         }"></span></div>
     </div>
@@ -285,14 +427,141 @@
     </div>
         </body>
 <script>
+    
+    const height = document.getElementById("inputType").offsetHeight;
+    
+    document.getElementById("clues").style.marginBlockStart = `${height+4}px`;
+
+    document.getElementById("inputType").pattern = "Hello";
+    
+    
+    getNames();
+    console.log(document.querySelector(".inputType").classList);
+    let teachersNames = [];
+    let clues = [];
+    let bufferNames = [];
+    
+    function focusInputIn(){
+        clues = bufferNames;
+        tryShowList(document.getElementById("input").value);
+    }
+    
+    function focusInputOut(){
+        bufferNames = clues;
+        tryShowList("");
+    }
+    
+    function tryShowList(text){
+        clues = [];
+        const input = text;
+        if (input !== ""){
+            for (const tName of teachersNames){
+                if (tName.name.toLowerCase().startsWith(input.toLowerCase()) && tName.name.toLowerCase() !== input.toLowerCase()){
+                    clues.push(tName.name);
+                } 
+            }
+        }
+        document.getElementById("clues").innerHTML = "";
+        for(const clue of clues){
+            const li = document.createElement("li");
+            li.innerText = clue;
+            li.id = "li";
+            li.addEventListener("click", _ => fillInput(clue));
+            if (clues.at(clues.length-1) === clue){
+                li.style.borderBottomLeftRadius = "10px";
+                li.style.borderBottomRightRadius = "10px";
+            }
+            document.getElementById("clues").append(li);
+        }
+        if (clues.length !== 0){
+            document.getElementById("input").classList.add("inputClues");
+            document.getElementById("menu").style.overflow = "visible";
+            document.getElementById("inputType").style.overflow = "visible";
+        }
+        else{
+            document.getElementById("input").classList.remove("inputClues");
+            document.getElementById("menu").style.overflow = "hidden";
+            document.getElementById("inputType").style.overflow = "hidden";
+        }
+    }
+
+    async function fillInput(text){
+        document.getElementById("input").value = text;
+        tryShowList(text)
+    }
+    
+    async function getNames(){
+        const response = await fetch("names/api", {
+            method: "GET",
+            headers: {"Accept" : "application/json"}
+        })
+        
+        if (response.ok){
+            const json = await response.json();
+            teachersNames = json["teachers"];
+        }
+    }
+
+    document.addEventListener('keyup', (event) => {
+        if (event.key === "Enter" && clues.length !== 0){
+            fillInput(clues[0]);
+        }
+    })
+
+    document.addEventListener('click', (event) => {
+        if (event.target.id === "li" || event.target.id === "input"){
+            focusInputIn();
+        }
+        else{
+            focusInputOut();
+        }
+    })
+
+
+
+    function wipeMenuContent(){
+        if (document.cookie.includes(".")){
+            showTeacherInput();
+            document.getElementById("input").value = document.getElementById("gn").innerText;
+        }
+        else{
+            wipeGroupNumber();
+        }
+    }
+    
+    let inputType;
     document.getElementById("schedule").addEventListener("click", () => window.location.href = "/schedule");
     document.getElementById("today").addEventListener("click", () => window.location.href = "/today");
     const value = document.cookie.split("=")[1].split("-");
     if (value[1].includes(".")){
+        inputType = 1;
+        showTeacherInput()
         document.getElementById("gn").innerText = decode(value[0]) + " " + decode(value[1]);
     }
     else{
+        inputType = 2;
+        showGroupInput();
         document.getElementById("gn").innerText = value[0] + "-" + value[1]
+    }
+    
+    function showGroupInput(){
+        document.getElementById("groupInput").style.display = "flex";
+        document.getElementById("teacherInput").style.display = "none";
+    }
+    function showTeacherInput(){
+        document.getElementById("groupInput").style.display = "none";
+        document.getElementById("teacherInput").style.display = "flex"; 
+    }
+    
+    function changeInput(){
+        if (inputType === 1){
+            showGroupInput();
+            inputType = 2;
+        }
+        else{
+            showTeacherInput();
+            inputType = 1;
+        }
     }
     
     function decode(data){
@@ -301,6 +570,17 @@
         for (const encodedSymbol of separateData) {
             result += String.fromCharCode(Number(encodedSymbol));
         }
+        return result;
+    }
+    
+    function encode(data){
+        let result = "";
+        for (const symbol of data){
+            result += "." + symbol.charCodeAt(0);
+            console.log(symbol)
+        }
+        
+        result = result.substring(1, result.length);
         return result;
     }
     
@@ -344,7 +624,14 @@
         }
         else
         {
-            document.getElementById("gn").innerText = data[0] + "-" + data[1];
+            if (data[1].includes('.')){
+                inputType = 1;
+                document.getElementById("gn").innerText = decode(data[0]) + " " + decode(data[1]);
+            }
+            else{
+                inputType = 2;
+                document.getElementById("gn").innerText = data[0] + "-" + data[1];
+            }
             document.getElementById("blur").style.display = "none"
             document.getElementById('loading').style.display = "none";
             setTimeout(() => {document.querySelector('.menu').classList.remove('menu-active');

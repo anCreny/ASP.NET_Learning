@@ -15,7 +15,6 @@ public class CookiePassMiddleWare
     public async Task Invoke(HttpContext context, TimeTableService timeTableService, Logger logger)
     {
         logger.LogNumberOfRequests();
-        Console.WriteLine($"{Encoder.Encode("Сизова")}-{Encoder.Encode("О.В.")}");
         if (context.Request.Cookies.TryGetValue("value", out var number))
         {
             var value = number.Split("-");

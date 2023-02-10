@@ -15,7 +15,7 @@ public class TimeTableHandler
     
     private TimeTable? ParseTimetable(Value value)
     {
-        var clinet = new HttpClient();
+        var client = new HttpClient();
         var options = new JsonSerializerOptions();
         if (value.RightPart.Contains("."))
         {
@@ -30,13 +30,13 @@ public class TimeTableHandler
         TimeTable? result = null;
         try
         {
-            result = clinet.GetFromJsonAsync<TimeTable>("https://forms.isuct.ru/timetable/rvuzov", options).Result;
+            result = client.GetFromJsonAsync<TimeTable>("https://forms.isuct.ru/timetable/rvuzov", options).Result;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
-
+        Console.WriteLine(result?.ToString());
         return result;
     }
 

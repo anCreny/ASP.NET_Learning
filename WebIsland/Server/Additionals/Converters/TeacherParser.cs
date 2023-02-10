@@ -24,7 +24,7 @@ public class TeacherParser : JsonConverter<TimeTable>
         var week = 0;
         var audience = new List<string>();
         var accept = false;
-        Console.WriteLine(_teacherName);
+        var wasCollision = false;
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "name")
@@ -118,6 +118,7 @@ public class TeacherParser : JsonConverter<TimeTable>
                                                 if (reader.GetString() == _teacherName)
                                                 {
                                                     accept = true;
+                                                    wasCollision = true;
                                                 }
                                             }
                                         }
@@ -140,7 +141,7 @@ public class TeacherParser : JsonConverter<TimeTable>
                 groupsNumber = new List<string>();
             }
         }
-        return week == 0 ? null : timeTable;
+        return !wasCollision ? null : timeTable;
     }
 
     public override void Write(Utf8JsonWriter writer, TimeTable value, JsonSerializerOptions options)
