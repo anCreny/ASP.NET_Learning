@@ -14,10 +14,15 @@ public class CookiePassMiddleWare
 
     public async Task Invoke(HttpContext context, TimeTableService timeTableService, Logger logger)
     {
-        logger.LogNumberOfRequests();
-        if (context.Request.Cookies.TryGetValue("value", out var number))
+        if (context.Request.Cookies.TryGetValue("number", out var number))
         {
-            var value = number.Split("-");
+            context.Response.Cookies.Delete("number");
+        }
+        
+        logger.LogNumberOfRequests();
+        if (context.Request.Cookies.TryGetValue("value", out var cookie))
+        {
+            var value = cookie.Split("-");
 
             if (timeTableService.TryCacheGroup(new Value(value[0], value[1])))
             {
