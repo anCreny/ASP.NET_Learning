@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: Calibri;
+        }
+        body{
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background-color: #242424;
+            display: flex;
+            justify-content: center;
+        }
+        .searchBox{
+            margin-top: 10px;
+            height: 50px;
+            width: 80%;
+            position: relative;
+            background-color: #3e3e3e;
+            display: block;
+        }
+        
+        input{
+            position: relative;
+            width: 100%;
+            height: 90%;
+            text-align: left;
+            background-color: white;
+            border-color: black;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            font-size: 2em;
+            padding-left: 10px;
+
+        }
+        .list{
+            background-color: white;
+            width: 100%;
+        }
+        ul li{
+            list-style: none;
+            margin-left: 10px;
+            font-size: 2em;
+            cursor: pointer;
+        }
+        ul li:hover{
+            background-color: grey;
+        }
+    </style>
+</head>
+<body id="body">
+<div id="searchBox" class="searchBox">
+    <input id="input" type="text" oninput="tryShowList(document.getElementById('input').value)">
+    <div id="box" class="list">
+        <ul id="clues">
+        </ul>
+    </div>
+</div>
+<div>
+    hello
+</div>
+</body>
+<script>
+    let list = ["Zebra", "Zoom", "Cengyry", "Snake"];
+    let tempList = [];
+    let bufferList = [];
+    
+    function focusInputIn(){
+        tempList = bufferList;
+        tryShowList(document.getElementById('input').value);
+    }
+    
+    
+    function focusInputOut(){
+        bufferList = tempList;
+        tryShowList("");
+    }
+    
+    function tryShowList(text){
+        tempList = [];
+        const input = text;
+        if (input !== "") {
+            for (const e of list) {
+                if (e.name.toLowerCase().startsWith(input.toLowerCase()) && e.name.toLowerCase() !== input.toLowerCase()) {
+                    tempList.push(e.name);
+                }
+            }
+        }
+        document.getElementById("list").innerHTML = "";
+        for(const element of tempList) {
+            const li = document.createElement("li");
+            li.innerText = element;
+            li.id = "li";
+            li.addEventListener("click", _ => fillInput(element))
+            document.getElementById("list").append(li);
+        }
+    }
+    
+    async function fillInput(text){
+        console.log("click");
+        document.getElementById("input").value = text;
+        tryShowList(text)
+    }
+    
+    document.addEventListener('keyup', (event) => {
+        if (event.key === "Enter" && tempList.length !== 0){
+            fillInput(tempList[0]);
+        }
+    })
+    
+    document.addEventListener('click', (event) => {
+        if (event.target.id === "li" || event.target.id === "input"){
+            focusInputIn();
+        }
+        else{
+            focusInputOut();
+        }
+    })
+    
+    async function getNames(){
+        const response = await fetch("names/api", {
+            method: "GET",
+            headers: {"Accept" : "application/json"}
+        })
+        
+        if (response.ok){
+            const json = await response.json();
+            list = json["teachers"];
+        }
+    }
+    
+    getNames();
+</script>
+</html>

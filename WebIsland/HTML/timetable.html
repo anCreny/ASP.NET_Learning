@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+    <style>
+        h1 {
+            text-align: center;
+            color: #78aeed;
+        }
+        table {
+            width: 100%;
+            border: lightgrey;
+        }
+        body {
+            background: #242424; 
+            font-family: Calibri;
+        }
+        th {color: aquamarine; 
+            background: #363636; 
+            padding: 4px;
+        }
+        td {
+            color: white; 
+            background: #363636; 
+            padding: 6px; 
+            min-width: 120px; 
+            max-width: 175px;
+            min-height: 80px;
+            overflow: hidden;
+        }
+        button {display: inline-block; 
+            border: 0; 
+            background: #363636; 
+            color: white;
+        }
+        button:hover{ 
+            background: #3e3e3e 
+        }
+        .tableHeader{
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+<h2>
+    <button style="float: left; height: 40px; width: 80px; border-radius: 10px" onclick="location.href ='./' ">Menu</button>
+</h2>
+    <h1>Schedule</h1>
+    <table id="table">
+        <tr>
+            <th class="tableHeader" style="border-top-left-radius: 10px">№</th>
+            <th class="tableHeader" >Time</th>
+            <th class="tableHeader" id="1">Monday</th>
+            <th class="tableHeader" id="2">Tuesday</th>
+            <th class="tableHeader" id="3">Wednesday</th>
+            <th class="tableHeader" id="4">Thursday</th>
+            <th class="tableHeader" id="5">Friday</th>
+            <th class="tableHeader" style="border-top-right-radius: 10px" id="6">Saturday</th>
+        </tr>
+    </table>
+</body>
+<script>
+    let table = [[],[]];
+    async function GetSchedule(){
+        const response = await fetch("schedule/api", {
+            method: "GET",
+            headers: {"Accept" : "application/json"}
+        })
+        
+        if (response.ok === true){
+            const schedule = await response.json();
+            schedule.days.forEach( day => SetDay(day));
+        }
+        else{
+            const error = response.json();
+            console.log(error.message)
+        }
+        sortLessons();
+        drawTable();
+        setToday();
+        setWeek();
+    }
+    
+    function SetDay(day){
+        day.lessons.forEach(lesson => SetLesson(lesson, day.week, day.weekday));
+    }
+    
+    function SetLesson(lesson, week, weekday){
+        let isExists = false;
+        let localMass;
+        for (const row of table[week-1]) {
+            if (row[0] === lesson.time.start + ":" + lesson.time.end + ":" + week){
+                isExists = true;
+                localMass = row;
+                break;
+            }
+        }
+        
+            if (isExists === true) {
+                localMass[weekday] = createCell(lesson);
+                isExists = false;
+            } else {
+                let massive = [lesson.time.start + ":" + lesson.time.end + ":" + week, "", "", "", "", "", ""];
+                massive[weekday] = createCell(lesson);
+                table[week - 1].push(massive);
+            }
+        
+    }
+    
+    function createCell(lesson){
+        let data = "";
+        switch (lesson.type){
+            case "лк.":
+                data += "1";
+                break;
+            case "лаб.":
+                data += "2";
+                break;
+            case "пр.з.":
+                data += "3";
+                break;
+            default:
+                data += "0";
+                break;
+        }
+        data += lesson.name + (lesson.type === "—" ? "" : ("[" + lesson.type + "]" )) + "\n";
+        lesson.audience.forEach( a => data += a.audience === "—" ? "" : a.audience + "\n");
+        lesson.teachers.forEach( t => data += t.teacher === "—" ? "" : t.teacher + "\n");
+        return data;
+    }
+    
+    function drawTable(){
+        const htmlTable = document.getElementById("table");
+        
+        for (let i = 0; i < 2; i++){
+            const tr = document.createElement("tr");
+            const th = document.createElement("th");
+            tr.id = table[i][0][0];
+            th.rowSpan = table[i].length;
+            th.innerText = (i + 1).toString();
+            th.id = "week" + th.innerText;
+            th.scope = "rowgroup";
+            
+            const time = table[i][0][0].split(":");
+            const th2 = document.createElement("th");
+            th2.innerText = time[0] + ":" + time[1] + "-\n" + time[3] + ":" + time[4];
+            th2.scope = "row";
+            tr.append(th);
+            tr.append(th2);
+            htmlTable.append(tr);
+            for (let j = 1; j < table[i].length; j++){
+                const tr = document.createElement("tr");
+                tr.id = table[i][j][0];
+                const th = document.createElement("th");
+                th.scope = "row";
+                const time = table[i][j][0].split(":");
+                th.innerText = time[0] + ":" + time[1] + "-\n" + time[3] + ":" + time[4];
+                tr.append(th);
+                htmlTable.append(tr);
+            }
+        }
+        for (const week of table) {
+            for (const row of week) {
+                const th = document.getElementById(row[0]);
+                for (let i = 1; i < row.length; i++){
+                    const td = document.createElement("td");
+                    let color = "";
+                    switch (row[i][0]){
+                        case "1":
+                            color = "#657352";
+                            break;
+                        case "2":
+                            color = "#526D73";
+                            break;
+                        case "3":
+                            color = "#735252";
+                            break;
+                        case "0":
+                            color = "rgb(129 129 129)";
+                            break;
+                    }
+                    td.style.backgroundColor = color;
+                    td.innerText = row[i].substring(1);
+                    th.append(td);
+                }
+            }
+        }
+    }
+    
+    function setToday(){
+        let today = new Date().getDay();
+        if (today !== 0){
+        const day = document.getElementById(today.toString());
+        day.style.backgroundColor = "#577292";
+        }
+    }
+    
+    function setWeek(){
+        let today = new Date();
+        let start = new Date();
+        start.setFullYear(2022, 8, 5);
+        let week = Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 7)) % 2 + 1;
+        week = 3 - week;
+        const weekLable = document.getElementById("week" + week);
+        weekLable.style.backgroundColor = "#577292";
+    }
+    
+    function sortLessons(){
+        for (const week of table) {
+            console.log(week);
+            week.sort(compare);
+        }
+        
+    }
+    
+    function compare(timeA, timeB){
+        console.log(timeA, timeB);
+        const timesA = timeA[0].split(":");
+        const minutesA = (Number(timesA[3]) * 60 + Number(timesA[4])) - (Number(timesA[0]) * 60 + Number(timesA[1]));
+        const timesB = timeB[0].split(":");
+        const minutesB = (Number(timesB[3]) * 60 + Number(timesB[4])) - (Number(timesB[0]) * 60 + Number(timesB[1]));
+        //console.log(`${timeA[0]} = ${minutes}`);
+        if (minutesA > 95){
+            return -1;
+        }
+        if (minutesB > 95){
+            return 1;
+        }
+        if (Number(timeA[0].split(":")[0]) > Number(timeB[0].split(":")[0])){
+            return 1;
+        }
+        if (Number(timeA[0].split(":")[0]) < Number(timeB[0].split(":")[0])){
+            return -1;
+        }
+        return 0;
+    }
+    GetSchedule();
+</script>
+</html>

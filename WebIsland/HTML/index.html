@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 98%">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <style>
+        body { 
+            height: 98%; 
+            background: #242424; 
+            font-family: Calibri;
+        }
+        button { height: 100%; 
+            width: 49%; 
+            display: inline-block;
+            border: 0;
+            background: #363636;
+            color: white;
+            font-size: 60px
+        }
+        button:hover{ 
+            background: #3e3e3e 
+        }
+        .groupNumber{
+            text-align: center;
+            color: aquamarine;
+            font-size: 6vh;
+            margin: 20px;
+        }
+        span:hover{
+            text-decoration-line: underline;
+            text-decoration-thickness: 3px;
+            cursor: pointer;
+        }
+        
+        .menu{
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            font-size: 30px;
+            width: 100%;
+            left: 0;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            height: 10%;
+            transition: 0.5s;
+            border-radius: 0 0 10px 10px;
+            background-color: #363636;
+            transform: translateY(-100%);
+            color:white;
+            overflow: hidden;
+
+        }
+        .menu-active{
+            transform: translateY(0%);
+        }
+        .btn{
+            height: 5vh;
+            width: 20vh;
+            border-radius: 10px;
+            font-size: 30px;
+            margin-left: 15px;
+        }
+        
+        .btn:hover{
+            color: aquamarine;
+        }
+        
+        .numbers{
+            display: flex;
+            height: 40px;
+            width: 50%;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .courseNumber{
+            width: 4vh;
+            height: 4vh;
+            display: inline-flex;
+            border-radius: 50%;
+            justify-content: center;
+            border: 0 solid #242424;
+            padding: calc((4vh - 4vh / 1.4142) / 2);
+            align-items: center;
+            background-color: inherit;
+        }
+        
+        .courseNumber:hover{
+            cursor: pointer;
+        }
+         
+        .circle-active{
+            background-color: #444444;
+        }
+        
+        .select{
+            width: 50%;
+            display: flex;
+            justify-content: center;
+        }
+        input[type=number]{
+            background-color: #303030;
+            border: 0;
+            margin-left: 5px;
+            border-radius: 5px;
+            color: white;
+            font-size: inherit;
+            max-width: 12%;
+            scrollbar-arrow-color: transparent;
+            padding-left: 7px;
+        }
+        ::-webkit-outer-spin-button, 
+        ::-webkit-inner-spin-button{
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type=text]{
+            background-color: #303030;
+            color: aquamarine;
+            width: 90%;
+            position: relative;
+            height: 80%;
+            border-radius: 10px;
+            border: 0;
+            z-index: 100;
+            font-size: inherit;
+            font-family: inherit;
+            padding: 0;
+            padding-left: 3px;
+        }
+        
+        .inputClues{
+            border-radius: 0 !important;
+            border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;
+        }
+        
+        input[type=text]:focus{
+            outline: none !important;
+            border: 0;
+        }
+        
+        .loading{
+            position: fixed;
+            z-index: 110;
+            height: 100%;
+            width: 100%;
+            border-radius: 0 0 10px 10px;
+            opacity: 90%;
+            background-color: #363636;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .inputType{
+            width: 50%;
+            display: flex;
+            height: 80%;
+            border-radius: 10px;
+            background-color: #292929;
+            justify-content: center;
+            overflow: hidden;
+            padding-left: 10px;
+        }
+        
+        .groupInput{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+            margin-top: 5px;
+        }
+
+        .block {
+            position: relative;
+            box-sizing: border-box;
+            float: left;
+            margin: 0 1.1vh 1.1vh 0;
+            width: 0.65vw;
+            height: 0.65vw;
+            border-radius: 3px;
+            background: #FFF;
+        }
+
+        .block:nth-child(10n+1) { animation: wave 2s ease .0s infinite; }
+        .block:nth-child(10n+2) { animation: wave 2s ease .1s infinite; }
+        .block:nth-child(10n+3) { animation: wave 2s ease .2s infinite; }
+        .block:nth-child(10n+4) { animation: wave 2s ease .3s infinite; }
+        .block:nth-child(10n+5) { animation: wave 2s ease .4s infinite; }
+        .block:nth-child(10n+6) { animation: wave 2s ease .5s infinite; }
+        .block:nth-child(10n+7) { animation: wave 2s ease .6s infinite; }
+        .block:nth-child(10n+8) { animation: wave 2s ease .7s infinite; }
+        .block:nth-child(10n+9) { animation: wave 2s ease .8s infinite; }
+        .block:nth-child(10n+10) { animation: wave 2s ease .9s infinite; }
+
+        @keyframes wave {
+            0%   { top: 0;     opacity: 1; }
+            50%  { opacity: .2; }
+            100% { top: 0;     opacity: 1; }
+        }
+        
+        .error{
+            color: red;
+        }
+
+        .lds-default {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .lds-default div {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            animation: lds-default 1.2s linear infinite;
+        }
+        .lds-default div:nth-child(1) {
+            animation-delay: 0s;
+            top: 37px;
+            left: 66px;
+        }
+        .lds-default div:nth-child(2) {
+            animation-delay: -0.1s;
+            top: 22px;
+            left: 62px;
+        }
+        .lds-default div:nth-child(3) {
+            animation-delay: -0.2s;
+            top: 11px;
+            left: 52px;
+        }
+        .lds-default div:nth-child(4) {
+            animation-delay: -0.3s;
+            top: 7px;
+            left: 37px;
+        }
+        .lds-default div:nth-child(5) {
+            animation-delay: -0.4s;
+            top: 11px;
+            left: 22px;
+        }
+        .lds-default div:nth-child(6) {
+            animation-delay: -0.5s;
+            top: 22px;
+            left: 11px;
+        }
+        .lds-default div:nth-child(7) {
+            animation-delay: -0.6s;
+            top: 37px;
+            left: 7px;
+        }
+        .lds-default div:nth-child(8) {
+            animation-delay: -0.7s;
+            top: 52px;
+            left: 11px;
+        }
+        .lds-default div:nth-child(9) {
+            animation-delay: -0.8s;
+            top: 62px;
+            left: 22px;
+        }
+        .lds-default div:nth-child(10) {
+            animation-delay: -0.9s;
+            top: 66px;
+            left: 37px;
+        }
+        .lds-default div:nth-child(11) {
+            animation-delay: -1s;
+            top: 62px;
+            left: 52px;
+        }
+        .lds-default div:nth-child(12) {
+            animation-delay: -1.1s;
+            top: 52px;
+            left: 62px;
+        }
+        @keyframes lds-default {
+            0%, 20%, 80%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+        }
+
+        .rightChangeButton {
+            text-align: center;
+            width: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: inherit;
+            font-size: inherit;
+            border-bottom-right-radius: 10px;
+            border-top-right-radius: 10px;
+            
+        }
+        .rightChangeButton:hover{
+           background-color: #3e3e3e;
+            cursor: pointer;
+        }
+
+        .teacherInput {
+            width: 100%;
+            display: flex;
+            height: 100%;
+            position: absolute;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .inputTypeChanger {
+            width: 80%;
+            height: 100%;
+            position: relative;
+        }
+
+        .teachers {
+            width: 90%;
+            position: absolute;
+            top: 0;
+            z-index: 90;
+        }
+        ul li{
+            list-style: none;
+            font-size: inherit;
+            font-family: inherit;
+            cursor: pointer;
+            background-color: #303030;
+            color: white;
+            margin: 0;
+            padding-left: 3px;
+        }
+        ul li:hover{
+            background-color: #323232;
+            color: aquamarine;
+        }
+        
+        ul{
+            margin-left: 0;
+            margin-block-start: 6.5%;
+            padding: 0;
+        }
+        
+    </style>
+</head>
+    <body>
+    <div>
+        <div id="menu" class="menu">
+            <div id="blur" style="display: none" class="loading">
+                <div style="display: none" id="loading" class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <h1 class="error" id="error" style="display: none">Invalid parameters</h1>
+            </div>
+                <div id="inputType" class="inputType">
+                    <div class="inputTypeChanger">
+                        <div id="groupInput" class="groupInput">
+                            <div class="numbers">
+                                <div style="color: aquamarine;">Course:</div>
+                                <div id="1" class="courseNumber" onclick="changeGroupNumber(1)">1</div>
+                                <div id="2" class="courseNumber" onclick="changeGroupNumber(2)">2</div>
+                                <div id="3" class="courseNumber" onclick="changeGroupNumber(3)">3</div>
+                                <div id="4" class="courseNumber" onclick="changeGroupNumber(4)">4</div>
+                            </div>
+                            <div class="select">
+                                <div style="color:aquamarine">Number:</div>
+                                <input id="number" type="number"/>
+                            </div>
+                        </div>
+                        <div id="teacherInput" class="teacherInput">
+                            <input id="input" pattern="hello" type="text" oninput="tryShowList(document.getElementById('input').value)">
+                            <div id="box" class="teachers">
+                                <ul id="clues">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <div class="rightChangeButton" onclick="changeInput()"> <-> </div>
+            </div>
+            
+            <button class="btn" onclick="
+            {
+                
+                console.log('inputType:', inputType);
+                if (inputType === 2){
+                    let data = [];
+                    data.push(groupNumber[0].toString());
+                    data.push(document.getElementById('number').value.toString());
+                    submit(data);
+                }
+                else{
+                    let data = [];
+                    let name = document.getElementById('input').value.split(' ');
+                    if (name.length !== 2){
+                        document.getElementById('blur').style.display = 'flex';
+                        showError();
+                    }
+                    else{
+                        data.push(encode(name[0]));
+                        data.push(encode(name[1]));
+                        submit(data);
+                    }
+                }
+            }
+            ">Submit</button>
+            <button onclick="{
+                document.querySelector('.menu').classList.remove('menu-active');
+            }" class="btn">Hide</button>
+        </div>
+        <div class="groupNumber" ><span id="gn" onclick="{
+            wipeMenuContent();
+            document.querySelector('.menu').classList.add('menu-active');
+        }"></span></div>
+    </div>
+    <div style="text-align: center; height: 90.6%">
+        <button id="schedule" style="border-bottom-left-radius: 10px; border-top-left-radius: 10px" >Schedule</button>
+        <button id="today" style="border-bottom-right-radius: 10px; border-top-right-radius: 10px">Today</button>
+    </div>
+        </body>
+<script>
+    
+    const height = document.getElementById("inputType").offsetHeight;
+    
+    document.getElementById("clues").style.marginBlockStart = `${height+4}px`;
+
+    document.getElementById("inputType").pattern = "Hello";
+    
+    
+    getNames();
+    console.log(document.querySelector(".inputType").classList);
+    let teachersNames = [];
+    let clues = [];
+    let bufferNames = [];
+    
+    function focusInputIn(){
+        clues = bufferNames;
+        tryShowList(document.getElementById("input").value);
+    }
+    
+    function focusInputOut(){
+        bufferNames = clues;
+        tryShowList("");
+    }
+    
+    function tryShowList(text){
+        clues = [];
+        const input = text;
+        if (input !== ""){
+            for (const tName of teachersNames){
+                if (tName.name.toLowerCase().startsWith(input.toLowerCase()) && tName.name.toLowerCase() !== input.toLowerCase()){
+                    clues.push(tName.name);
+                } 
+            }
+        }
+        document.getElementById("clues").innerHTML = "";
+        for(const clue of clues){
+            const li = document.createElement("li");
+            li.innerText = clue;
+            li.id = "li";
+            li.addEventListener("click", _ => fillInput(clue));
+            if (clues.at(clues.length-1) === clue){
+                li.style.borderBottomLeftRadius = "10px";
+                li.style.borderBottomRightRadius = "10px";
+            }
+            document.getElementById("clues").append(li);
+        }
+        if (clues.length !== 0){
+            document.getElementById("input").classList.add("inputClues");
+            document.getElementById("menu").style.overflow = "visible";
+            document.getElementById("inputType").style.overflow = "visible";
+        }
+        else{
+            document.getElementById("input").classList.remove("inputClues");
+            document.getElementById("menu").style.overflow = "hidden";
+            document.getElementById("inputType").style.overflow = "hidden";
+        }
+    }
+
+    async function fillInput(text){
+        document.getElementById("input").value = text;
+        tryShowList(text)
+    }
+    
+    async function getNames(){
+        const response = await fetch("names/api", {
+            method: "GET",
+            headers: {"Accept" : "application/json"}
+        })
+        
+        if (response.ok){
+            const json = await response.json();
+            teachersNames = json["teachers"];
+        }
+    }
+
+    document.addEventListener('keyup', (event) => {
+        if (event.key === "Enter" && clues.length !== 0){
+            fillInput(clues[0]);
+        }
+    })
+
+    document.addEventListener('click', (event) => {
+        if (event.target.id === "li" || event.target.id === "input"){
+            focusInputIn();
+        }
+        else{
+            focusInputOut();
+        }
+    })
+
+
+
+    function wipeMenuContent(){
+        if (document.cookie.includes(".")){
+            showTeacherInput();
+            document.getElementById("input").value = document.getElementById("gn").innerText;
+        }
+        else{
+            wipeGroupNumber();
+        }
+    }
+    
+    let inputType;
+    document.getElementById("schedule").addEventListener("click", () => window.location.href = "/schedule");
+    document.getElementById("today").addEventListener("click", () => window.location.href = "/today");
+    const value = document.cookie.split("=")[1].split("-");
+    if (value[1].includes(".")){
+        inputType = 1;
+        showTeacherInput()
+        document.getElementById("gn").innerText = decode(value[0]) + " " + decode(value[1]);
+    }
+    else{
+        inputType = 2;
+        showGroupInput();
+        document.getElementById("gn").innerText = value[0] + "-" + value[1]
+    }
+    
+    function showGroupInput(){
+        document.getElementById("groupInput").style.display = "flex";
+        document.getElementById("teacherInput").style.display = "none";
+    }
+    function showTeacherInput(){
+        document.getElementById("groupInput").style.display = "none";
+        document.getElementById("teacherInput").style.display = "flex"; 
+    }
+    
+    function changeInput(){
+        if (inputType === 1){
+            showGroupInput();
+            inputType = 2;
+        }
+        else{
+            showTeacherInput();
+            inputType = 1;
+        }
+    }
+    
+    function decode(data){
+        let result = "";
+        const separateData = data.split(".");
+        for (const encodedSymbol of separateData) {
+            result += String.fromCharCode(Number(encodedSymbol));
+        }
+        return result;
+    }
+    
+    function encode(data){
+        let result = "";
+        for (const symbol of data){
+            result += "." + symbol.charCodeAt(0);
+            console.log(symbol)
+        }
+        
+        result = result.substring(1, result.length);
+        return result;
+    }
+    
+    function changeColor(id){
+        for (let i = 1; i < 5; i++){
+            if (i === Number(id)){
+                document.getElementById(i.toString()).classList.add('circle-active');
+            }
+            else{
+                document.getElementById(i.toString()).classList.remove('circle-active');
+            }
+        }
+    }
+    
+    let groupNumber = [-1, -1];
+    function changeGroupNumber(id){
+        changeColor(id);
+        groupNumber[0] = id;
+    }
+    function wipeGroupNumber(){
+        groupNumber = document.cookie.split("=")[1].split("-");
+        changeGroupNumber(groupNumber[0])
+        document.getElementById("number").value = groupNumber[1];
+    }
+    async function submit(data){
+        document.getElementById("blur").style.display = "flex";
+        document.getElementById('loading').style.display = "block";
+        
+        const response = await fetch("settings/api", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                leftPart: data[0],
+                rightPart: data[1]
+            })
+        });
+        
+        if (response.status === 11 || response.ok !== true)
+        {
+            showError();
+        }
+        else
+        {
+            if (data[1].includes('.')){
+                inputType = 1;
+                document.getElementById("gn").innerText = decode(data[0]) + " " + decode(data[1]);
+            }
+            else{
+                inputType = 2;
+                document.getElementById("gn").innerText = data[0] + "-" + data[1];
+            }
+            document.getElementById("blur").style.display = "none"
+            document.getElementById('loading').style.display = "none";
+            setTimeout(() => {document.querySelector('.menu').classList.remove('menu-active');
+            }, 300)
+        }
+    }
+    
+    function showError(){
+        document.getElementById('loading').style.display = "none";
+        document.getElementById("error").style.display = "block"
+        setTimeout(() => {
+            document.getElementById("error").style.display = "none"
+            document.getElementById("blur").style.display = "none"
+        }, 1000)
+    }
+</script>
+</html>
