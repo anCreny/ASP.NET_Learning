@@ -10,7 +10,7 @@ builder.Services.AddSingleton(new TeachersNamesHandler());
 var app = builder.Build();
 
 
-
+app.UseStaticFiles();
 app.UseCookieChecker();
 
 app.Map("/names/api", _ =>
